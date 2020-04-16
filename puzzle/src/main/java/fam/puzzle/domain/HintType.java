@@ -1,0 +1,9 @@
+package fam.puzzle.domain;
+
+public enum HintType {
+    ALL_WRONG,
+    ONE_RIGHT_CORRECT_POSITION,
+    ONE_RIGHT_INCORRECT_POSITION,
+    TWO_RIGHT_INCORRECT_POSITION,
+    TWO_RIGHT_ONE_CORRECT_POSITION
+}

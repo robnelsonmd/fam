@@ -1,0 +1,3 @@
+rootProject.name = 'fam'
+include 'puzzle'
+

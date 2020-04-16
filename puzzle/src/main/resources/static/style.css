@@ -1,0 +1,25 @@
+body {
+    font-size: 1.25rem;
+}
+
+.answer {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.hr-primary {
+    width: 80%;
+}
+
+.hr-secondary {
+    width: 50%;
+}
+
+.hint {
+    font-size: 1.5rem;
+}
+
+.hint-bold {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
