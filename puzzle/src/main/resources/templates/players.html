@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+            crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <title>Number Puzzle Players</title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <div class="container">
+        <a href="index" class="navbar-brand">Number Puzzle</a>
+        <button
+                class="navbar-toggler"
+                data-toggle="collapse"
+                data-target="#navbarCollapse"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="navbarCollapse" class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a href="index" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a href="players" class="nav-link">Players</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<header id="header">
+    <h1 align="center">Number Puzzle Players Page</h1>
+    <hr class="hr-primary">
+</header>
+
+<section id="players">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 align-self-center m-auto text-center">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th>Correct Guesses</th>
+                        <th>Incorrect Guesses</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="player : ${session.players}">
+                        <td th:text="${player.name}"></td>
+                        <td th:text="${player.correctGuessCount}"></td>
+                        <td th:text="${player.incorrectGuessCount}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

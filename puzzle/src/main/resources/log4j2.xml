@@ -22,16 +22,17 @@
         </RollingFile>
     </Appenders>
     <Loggers>
-        <Logger name="fam" level="info">
-<!--            <AppenderRef ref="Console"/>-->
-            <AppenderRef ref="RollingFile"/>
-        </Logger>
-        <Logger name="org.springframework.boot.web" level="info">
-<!--            <AppenderRef ref="Console"/>-->
-            <AppenderRef ref="RollingFile"/>
-        </Logger>
-        <Root level="error">
+        <Logger name="fam" level="info" additivity="false">
             <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </Logger>
+        <Logger name="org.springframework.boot.web" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </Logger>
+        <Root level="warn">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
         </Root>
     </Loggers>
 </Configuration>

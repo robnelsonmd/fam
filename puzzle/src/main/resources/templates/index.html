@@ -14,42 +14,111 @@
 </head>
 <body>
 
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <div class="container">
+        <a href="index" class="navbar-brand">Number Puzzle</a>
+        <button
+                class="navbar-toggler"
+                data-toggle="collapse"
+                data-target="#navbarCollapse"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="navbarCollapse" class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a href="index" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="players" class="nav-link">Players</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
 <header id="header">
     <h1 align="center">Number Puzzle Page</h1>
     <hr class="hr-primary">
 </header>
 
 <section id="name">
-    <span><b>Current Player: </b><span th:text="${session.name}">Name</span></span>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 align-self-center m-auto">
+                <span class="player-name">Welcome, <span th:text="${session.player.name}">Name</span>!</span>
+            </div>
+        </div>
+    </div>
     <br>
 </section>
 
 <section id="hints">
-    <table>
-        <tr th:each="hint : ${puzzle.getHints()}">
-            <td class="hint-bold">Hint: </td>
-            <td class="hint" th:text="${hint}"></td>
-        </tr>
-    </table>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 align-self-center m-auto">
+                <table>
+                    <tr th:each="hint : ${session.puzzle.getHints()}">
+                        <td class="hint" th:text="${hint}"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
     <hr class="hr-secondary">
 </section>
 
 <section id="answer">
-    <span class="answer" th:if="${incorrectGuessCount != null}" th:text="${incorrectGuessCount}">Static Guess Count</span>
-    <span class="answer" th:text="${answer}">Static Answer</span>
-    <span class="answer" th:text="${result}">Static Result</span>
-    <span class="answer" th:text="${cheat}">Static Cheat</span>
+    <div class="container">
+        <div th:if="${session.puzzle.incorrectGuessCount != null}" class="row">
+            <div class="col-xs-12 align-self-center m-auto">
+                <span class="answer">
+                    Number of incorrect guesses: <span th:text="${session.puzzle.incorrectGuessCount}">Static Guess Count</span>
+                </span>
+            </div>
+        </div>
+        <div th:if="${answer != null}" class="row">
+            <div class="col-xs-12 align-self-center m-auto">
+                <span class="answer">
+                    The answer is <span th:text="${answer}">Static Answer</span>
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 align-self-center m-auto">
+                <span class="answer" th:text="${result}">Static Result</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 align-self-center m-auto">
+                <span class="answer" th:text="${cheat}">Static Cheat</span>
+            </div>
+        </div>
+    </div>
 </section>
 
 <section id="actions">
-    <form th:if="${answer == null}" method="POST" action="/guess" class="form-inline justify-content-start">
-        <input type="text" name="guess"class="form-control mb-2 mr-2" placeholder="Enter Guess">
-        <button class="btn btn-primary mb-2 mr-2" name="submit" value="submit">Submit Guess</button>
-        <button class="btn btn-secondary mb-2" name="show" value="show">Show Answer</button>
-    </form>
-    <form method="GET" action="/index">
-        <button>Generate New Puzzle</button>
-    </form>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 align-self-center m-auto">
+                <form th:if="${answer == null}" method="POST" action="/guess" class="form-inline justify-content-start">
+                    <label for="guess" class="mr-2">Enter Guess</label>
+                    <input type="text" id="guess" name="guess" class="form-control mb-2 mr-2" placeholder="???">
+                    <button class="btn btn-primary mb-2 mr-2 d-none d-sm-block" name="submit" value="submit">Submit Guess</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 align-self-center m-auto">
+                <form method="POST" action="/actions" class="form-inline m-auto">
+                    <button th:if="${answer == null}" class="btn btn-warning mr-2" name="showAnswer">Show Answer</button>
+                    <button class="btn btn-warning" name="newPuzzle">Generate New Puzzle</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </section>
 
 </body>

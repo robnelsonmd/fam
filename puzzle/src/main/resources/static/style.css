@@ -2,6 +2,18 @@ body {
     font-size: 1.25rem;
 }
 
+.navbar .nav-link {
+    font-size: 14px;
+    text-transform: uppercase;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+}
+
+.navbar .nav-item.active {
+    border-left: #444 3px solid;
+}
+
+
 .answer {
     display: block;
     margin-bottom: 5px;
@@ -21,5 +33,14 @@ body {
 
 .hint-bold {
     font-size: 1.5rem;
+    font-weight: bold;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+.player-name {
+    font-size: 3rem;
     font-weight: bold;
 }

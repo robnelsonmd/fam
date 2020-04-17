@@ -4,7 +4,7 @@ plugins {
     id 'java'
 }
 
-version = '3.0-SNAPSHOT'
+version '1.0-SNAPSHOT'
 sourceCompatibility = '8'
 
 configurations {
@@ -18,12 +18,8 @@ configurations {
 }
 
 dependencies {
-    implementation project(':core')
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
@@ -32,3 +28,6 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+bootJar.enabled = false
+jar.enabled = true
