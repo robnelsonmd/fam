@@ -29,6 +29,8 @@ body {
 
 .hint {
     font-size: 1.5rem;
+    font-family: "Lucida Console", Monaco, Monospaced ;
+    font-weight: bold;
 }
 
 .hint-bold {

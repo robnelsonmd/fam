@@ -49,6 +49,11 @@ public class Player {
         return correctGuessCount;
     }
 
+    @JsonIgnore
+    public int getGuessCountRatio() {
+        return correctGuessCount - incorrectGuessCount;
+    }
+
     public int getIncorrectGuessCount() {
         return incorrectGuessCount;
     }

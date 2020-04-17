@@ -26,7 +26,7 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public List<Player> getPlayers() {
         List<Player> players = playerRepository.findAll();
-        players.sort(Comparator.comparingInt(Player::getCorrectGuessCount).reversed());
+        players.sort(Comparator.comparingInt(Player::getGuessCountRatio).reversed());
         return players;
     }
 
