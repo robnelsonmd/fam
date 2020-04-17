@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
@@ -105,6 +106,7 @@ public class PuzzleController {
 
     @PostMapping("/login")
     public String login(
+            HttpServletRequest httpServletRequest,
             HttpSession httpSession,
             @RequestParam("name") String name
     ) {
@@ -112,6 +114,7 @@ public class PuzzleController {
             return "login";
         }
 
+        LOG.info(String.format("Player %s logging in from %s",name,httpServletRequest.getRemoteAddr()));
         updatePlayer(httpSession, playerService.getPlayer(name));
         return index(httpSession);
     }
