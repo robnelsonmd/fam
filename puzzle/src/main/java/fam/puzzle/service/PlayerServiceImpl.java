@@ -29,53 +29,37 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Player incrementCheatCount(Player player) {
-        return playerRepository.save(
-                new Player(
-                        player.getName(),
-                        (player.getCheatCount() + 1),
-                        player.getCorrectGuessCount(),
-                        player.getIncorrectGuessCount(),
-                        player.getShowAnswerCount()
-                )
-        );
+        player = player.playerBuilder().incrementCheatCount().build();
+        return playerRepository.save(player);
     }
 
     @Override
     public Player incrementCorrectGuessCount(Player player) {
-        return playerRepository.save(
-                new Player(
-                        player.getName(),
-                        player.getCheatCount(),
-                        (player.getCorrectGuessCount() + 1),
-                        player.getIncorrectGuessCount(),
-                        player.getShowAnswerCount()
-                )
-        );
+        player = player.playerBuilder().incrementCorrectGuessCount().build();
+        return playerRepository.save(player);
     }
 
     @Override
     public Player incrementIncorrectGuessCount(Player player) {
-        return playerRepository.save(
-                new Player(
-                        player.getName(),
-                        player.getCheatCount(),
-                        player.getCorrectGuessCount(),
-                        (player.getIncorrectGuessCount() + 1),
-                        player.getShowAnswerCount()
-                )
-        );
+        player = player.playerBuilder().incrementIncorrectGuessCount().build();
+        return playerRepository.save(player);
     }
 
     @Override
     public Player incrementShowAnswerCount(Player player) {
-        return playerRepository.save(
-                new Player(
-                        player.getName(),
-                        player.getCheatCount(),
-                        player.getCorrectGuessCount(),
-                        player.getIncorrectGuessCount(),
-                        (player.getShowAnswerCount() + 1)
-                )
-        );
+        player = player.playerBuilder().incrementShowAnswerCount().build();
+        return playerRepository.save(player);
+    }
+
+    @Override
+    public Player updateEmailAddress(Player player, String emailAddress) {
+        player = player.playerBuilder().updateEmailAddress(emailAddress).build();
+        return playerRepository.save(player);
+    }
+
+    @Override
+    public Player updateReceiveEmails(Player player, boolean receiveEmails) {
+        player = player.playerBuilder().updateReceiveEmails(receiveEmails).build();
+        return playerRepository.save(player);
     }
 }

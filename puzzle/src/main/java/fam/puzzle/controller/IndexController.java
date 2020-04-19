@@ -15,14 +15,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-public class PuzzleController {
-    private static final Logger LOG = LoggerFactory.getLogger(PuzzleController.class);
+public class IndexController extends AbstractController {
+    private static final Logger LOG = LoggerFactory.getLogger(IndexController.class);
 
     private final PlayerService playerService;
     private final PuzzleService puzzleService;
 
-    public PuzzleController(PlayerService playerService,
-                            PuzzleService puzzleService) {
+    public IndexController(PlayerService playerService,
+                           PuzzleService puzzleService) {
         this.playerService = playerService;
         this.puzzleService = puzzleService;
     }
@@ -86,12 +86,6 @@ public class PuzzleController {
         return "index";
     }
 
-    @GetMapping("/players")
-    public String players(HttpSession httpSession) {
-        updatePlayers(httpSession, playerService.getPlayers());
-        return "players";
-    }
-
     private void generateNewPuzzle(HttpSession httpSession) {
         Player player = getPlayer(httpSession);
         LOG.info(String.format("Generating new puzzle for %s",player));
@@ -100,10 +94,6 @@ public class PuzzleController {
 
     private List<Integer> getAnswer(HttpSession httpSession) {
         return getPuzzle(httpSession).getAnswer();
-    }
-
-    private Player getPlayer(HttpSession httpSession) {
-        return (Player) httpSession.getAttribute("player");
     }
 
     private Puzzle getPuzzle(HttpSession httpSession) {
@@ -148,14 +138,6 @@ public class PuzzleController {
         incrementIncorrectGuessCount(httpSession);
         model.addAttribute("result",
                 String.format("%s is not the correct answer - try again",guess));
-    }
-
-    private void updatePlayer(HttpSession httpSession, Player player) {
-        httpSession.setAttribute("player", player);
-    }
-
-    private void updatePlayers(HttpSession httpSession, List<Player> players) {
-        httpSession.setAttribute("players", players);
     }
 
     private void updatePuzzle(HttpSession httpSession, Puzzle puzzle) {

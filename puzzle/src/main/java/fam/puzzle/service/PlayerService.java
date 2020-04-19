@@ -11,4 +11,6 @@ public interface PlayerService {
     Player incrementCorrectGuessCount(Player player);
     Player incrementIncorrectGuessCount(Player player);
     Player incrementShowAnswerCount(Player player);
+    Player updateEmailAddress(Player player, String emailAddress);
+    Player updateReceiveEmails(Player player, boolean receiveEmails);
 }
