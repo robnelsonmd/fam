@@ -17,10 +17,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Player getPlayer(String name) {
-        Player player = playerRepository.findPlayer(name);
-
-        return (player != null) ?  player :
-                playerRepository.save(new Player(name));
+        return playerRepository.findPlayer(name);
     }
 
     @Override

@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fam.core.util.StringUtil;
+import fam.puzzle.security.PuzzleUser;
 
 import java.util.Objects;
 
-public class Player {
-    private final String name;
+public class Player extends PuzzleUser {
     private final int cheatCount;
     private final int correctGuessCount;
     private final int incorrectGuessCount;
@@ -22,11 +22,12 @@ public class Player {
             @JsonProperty("incorrectGuessCount") int incorrectGuessCount,
             @JsonProperty("showAnswerCount") int showAnswerCount
     ) {
+        super(name);
+
         if (StringUtil.isEmptyString(name)) {
             throw new IllegalArgumentException(String.format("Invalid player name (%s)",name));
         }
 
-        this.name = name;
         this.cheatCount = cheatCount;
         this.correctGuessCount = correctGuessCount;
         this.incorrectGuessCount = incorrectGuessCount;
@@ -38,7 +39,7 @@ public class Player {
     }
 
     public String getName() {
-        return name;
+        return getUsername();
     }
 
     public int getCheatCount() {
@@ -67,16 +68,16 @@ public class Player {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Player player = (Player) o;
-        return name.equals(player.name);
+        return getName().equals(player.getName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(getName());
     }
 
     @Override
     public String toString() {
-        return name;
+        return getName();
     }
 }

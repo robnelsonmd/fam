@@ -1,6 +1,5 @@
 package fam.puzzle.controller;
 
-import fam.core.util.StringUtil;
 import fam.puzzle.domain.Player;
 import fam.puzzle.domain.Puzzle;
 import fam.puzzle.service.PlayerService;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
@@ -36,10 +34,6 @@ public class PuzzleController {
             @RequestParam("showAnswer") Optional<String> showAnswer,
             @RequestParam("newPuzzle") Optional<String> newPuzzle
     ) {
-        if (isSessionInvalid(httpSession)) {
-            return "login";
-        }
-
         if (showAnswer.isPresent()) {
             LOG.info(String.format("%s showed the answer",getPlayer(httpSession)));
             incrementShowAnswerCount(httpSession);
@@ -56,10 +50,6 @@ public class PuzzleController {
 
     @GetMapping("/cheat")
     public String cheat(Model model, HttpSession httpSession) {
-        if (isSessionInvalid(httpSession)) {
-            return "login";
-        }
-
         LOG.info(String.format("%s cheated!",getPlayer(httpSession)));
         incrementCheatCount(httpSession);
         model.addAttribute("cheat", String.format("CHEAT: The answer is %s",getAnswer(httpSession)));
@@ -72,10 +62,6 @@ public class PuzzleController {
             HttpSession httpSession,
             @RequestParam("guess") String guess
     ) {
-        if (isSessionInvalid(httpSession)) {
-            return "login";
-        }
-
         try {
             int number = Integer.parseInt(guess);
             guess = String.format("%03d",number);
@@ -95,36 +81,13 @@ public class PuzzleController {
 
     @RequestMapping(value = {"","/","/index","/index.html"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String index(HttpSession httpSession) {
-        if (isSessionInvalid(httpSession)) {
-            return "login";
-        }
-
         generateNewPuzzle(httpSession);
 
         return "index";
     }
 
-    @PostMapping("/login")
-    public String login(
-            HttpServletRequest httpServletRequest,
-            HttpSession httpSession,
-            @RequestParam("name") String name
-    ) {
-        if (StringUtil.isEmptyString(name)) {
-            return "login";
-        }
-
-        LOG.info(String.format("Player %s logging in from %s",name,httpServletRequest.getRemoteAddr()));
-        updatePlayer(httpSession, playerService.getPlayer(name));
-        return index(httpSession);
-    }
-
     @GetMapping("/players")
     public String players(HttpSession httpSession) {
-        if (isSessionInvalid(httpSession)) {
-            return "login";
-        }
-
         updatePlayers(httpSession, playerService.getPlayers());
         return "players";
     }
@@ -169,10 +132,6 @@ public class PuzzleController {
         Player player = getPlayer(httpSession);
         player = playerService.incrementShowAnswerCount(player);
         updatePlayer(httpSession, player);
-    }
-
-    private boolean isSessionInvalid(HttpSession httpSession) {
-        return httpSession.getAttribute("player") == null;
     }
 
     private void processCorrectGuess(Model model, HttpSession httpSession) {
