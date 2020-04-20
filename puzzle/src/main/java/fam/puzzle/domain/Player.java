@@ -31,6 +31,7 @@ public class Player extends PuzzleUser implements Serializable {
             this.name = player.getName();
             this.authorities.addAll(player.getAuthorities());
             this.emailAddress =  player.emailAddress;
+            this.receiveEmails = player.receiveEmails;
             this.cheatCount =  player.cheatCount;
             this.correctGuessCount =  player.correctGuessCount;
             this.incorrectGuessCount =  player.incorrectGuessCount;
