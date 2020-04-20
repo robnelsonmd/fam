@@ -5,8 +5,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fam.core.util.StringUtil;
 import fam.puzzle.security.PuzzleUser;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class Player extends PuzzleUser implements Serializable {
@@ -14,6 +19,7 @@ public class Player extends PuzzleUser implements Serializable {
 
     public static class Builder {
         private final String name;
+        private final List<GrantedAuthority> authorities = new ArrayList<>();
         private String emailAddress;
         private boolean receiveEmails;
         private int cheatCount;
@@ -23,6 +29,7 @@ public class Player extends PuzzleUser implements Serializable {
 
         private Builder(Player player) {
             this.name = player.getName();
+            this.authorities.addAll(player.getAuthorities());
             this.emailAddress =  player.emailAddress;
             this.cheatCount =  player.cheatCount;
             this.correctGuessCount =  player.correctGuessCount;
@@ -63,6 +70,7 @@ public class Player extends PuzzleUser implements Serializable {
         public Player build() {
             return new Player(
                     name,
+                    convertListToSimpleGrantedAuthorities(authorities),
                     emailAddress,
                     receiveEmails,
                     cheatCount,
@@ -70,6 +78,12 @@ public class Player extends PuzzleUser implements Serializable {
                     incorrectGuessCount,
                     showAnswerCount
             );
+        }
+
+        private static List<SimpleGrantedAuthority> convertListToSimpleGrantedAuthorities(List<GrantedAuthority> grantedAuthorities) {
+            List<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();
+            grantedAuthorities.forEach(grantedAuthority -> simpleGrantedAuthorities.add((SimpleGrantedAuthority)grantedAuthority));
+            return simpleGrantedAuthorities;
         }
     }
 
@@ -83,6 +97,7 @@ public class Player extends PuzzleUser implements Serializable {
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public Player(
             @JsonProperty("name") String name,
+            @JsonProperty("authorities") List<SimpleGrantedAuthority> authorities,
             @JsonProperty("emailAddress") String emailAddress,
             @JsonProperty("receiveEmails") boolean receiveEmails,
             @JsonProperty("cheatCount") int cheatCount,
@@ -90,7 +105,7 @@ public class Player extends PuzzleUser implements Serializable {
             @JsonProperty("incorrectGuessCount") int incorrectGuessCount,
             @JsonProperty("showAnswerCount") int showAnswerCount
     ) {
-        super(name);
+        super(name, authorities);
 
         if (StringUtil.isEmptyString(name)) {
             throw new IllegalArgumentException(String.format("Invalid player name (%s)",name));
@@ -105,7 +120,7 @@ public class Player extends PuzzleUser implements Serializable {
     }
 
     public Player(String name) {
-        this(name, "", false, 0, 0, 0, 0);
+        this(name, Collections.emptyList(), "", false, 0, 0, 0, 0);
     }
 
     public Builder playerBuilder() {

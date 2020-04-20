@@ -6,17 +6,16 @@ import org.springframework.security.core.userdetails.User;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 public class PuzzleUser extends User implements Serializable {
     private static final long serialVersionUID = -8010167368134812725L;
 
-    public PuzzleUser(String username) {
-        super(username, "{noop}", Collections.emptyList());
+    public PuzzleUser(String username, List<? extends GrantedAuthority> authorities) {
+        super(username, "{noop}", authorities);
     }
 
     @Override
-    @JsonIgnore
     public Collection<GrantedAuthority> getAuthorities() {
         return super.getAuthorities();
     }

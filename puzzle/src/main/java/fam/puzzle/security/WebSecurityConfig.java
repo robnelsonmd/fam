@@ -31,12 +31,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/style.css", "favicon.ico").permitAll()
+                .antMatchers("/actuator/**").access("hasAuthority('ADMIN')")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login").permitAll().successHandler(loginSuccessHandler())
                 .and()
-                .logout()
-                .permitAll();
+                .logout().permitAll();
     }
 }
