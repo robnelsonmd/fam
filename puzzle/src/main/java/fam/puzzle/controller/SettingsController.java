@@ -36,5 +36,4 @@ public class SettingsController extends AbstractController {
 
         return "index";
     }
-
 }

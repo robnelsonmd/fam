@@ -15,7 +15,7 @@ public class PlayerRepositoryImpl extends FileRepositoryImpl<Player> implements 
     @Override
     public Player findPlayer(String name) {
         return findAll().stream()
-                .filter(player -> player.getName().equals(name))
+                .filter(player -> player.getName().equalsIgnoreCase(name))
                 .findFirst().orElse(null);
     }
 }

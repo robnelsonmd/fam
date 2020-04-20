@@ -4,15 +4,26 @@ import fam.puzzle.domain.Player;
 import fam.puzzle.repository.PlayerRepository;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.Comparator;
 import java.util.List;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
+    private final EmailService emailService;
     private final PlayerRepository playerRepository;
 
-    public PlayerServiceImpl(PlayerRepository playerRepository) {
+    private Player currentLeader;
+
+    public PlayerServiceImpl(EmailService emailService, PlayerRepository playerRepository) {
+        this.emailService = emailService;
         this.playerRepository = playerRepository;
+    }
+
+    @PostConstruct
+    public void init() {
+        List<Player> players = getPlayers();
+        currentLeader = !players.isEmpty() ? players.get(0) : null;
     }
 
     @Override
@@ -36,13 +47,17 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public Player incrementCorrectGuessCount(Player player) {
         player = player.playerBuilder().incrementCorrectGuessCount().build();
-        return playerRepository.save(player);
+        player = playerRepository.save(player);
+        updateCurrentLeader();
+        return player;
     }
 
     @Override
     public Player incrementIncorrectGuessCount(Player player) {
         player = player.playerBuilder().incrementIncorrectGuessCount().build();
-        return playerRepository.save(player);
+        player = playerRepository.save(player);
+        updateCurrentLeader();
+        return player;
     }
 
     @Override
@@ -61,5 +76,13 @@ public class PlayerServiceImpl implements PlayerService {
     public Player updateReceiveEmails(Player player, boolean receiveEmails) {
         player = player.playerBuilder().updateReceiveEmails(receiveEmails).build();
         return playerRepository.save(player);
+    }
+
+    private void updateCurrentLeader() {
+        Player newLeader = getPlayers().get(0);
+        if (!newLeader.equals(currentLeader)) {
+            currentLeader = newLeader;
+            emailService.sendPuzzleLeaderChangeEmail(getPlayers());
+        }
     }
 }

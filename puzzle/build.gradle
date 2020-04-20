@@ -4,7 +4,7 @@ plugins {
     id 'java'
 }
 
-version = '3.2-SNAPSHOT'
+version = '4.0-SNAPSHOT'
 sourceCompatibility = '8'
 
 configurations {
@@ -21,6 +21,7 @@ dependencies {
     implementation project(':core')
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
