@@ -30,46 +30,46 @@ public class IndexController extends AbstractController {
     @PostMapping("/actions")
     public String actions(
             Model model,
-            HttpSession httpSession,
+            HttpSession session,
             @RequestParam("showAnswer") Optional<String> showAnswer,
             @RequestParam("newPuzzle") Optional<String> newPuzzle
     ) {
         if (showAnswer.isPresent()) {
-            LOG.info(String.format("%s showed the answer",getPlayer(httpSession)));
-            incrementShowAnswerCount(httpSession);
-            model.addAttribute("answer", getAnswer(httpSession));
-            generateNewPuzzle(httpSession);
+            LOG.info(String.format("%s showed the answer",getPlayer(session)));
+            incrementShowAnswerCount(session);
+            model.addAttribute("answer", getAnswer(session));
+            generateNewPuzzle(session);
         }
 
         if (newPuzzle.isPresent()) {
-            generateNewPuzzle(httpSession);
+            generateNewPuzzle(session);
         }
 
         return "index";
     }
 
     @GetMapping("/cheat")
-    public String cheat(Model model, HttpSession httpSession) {
-        LOG.info(String.format("%s cheated!",getPlayer(httpSession)));
-        incrementCheatCount(httpSession);
-        model.addAttribute("cheat", String.format("CHEAT: The answer is %s",getAnswer(httpSession)));
+    public String cheat(Model model, HttpSession session) {
+        LOG.info(String.format("%s cheated!",getPlayer(session)));
+        incrementCheatCount(session);
+        model.addAttribute("cheat", String.format("CHEAT: The answer is %s",getAnswer(session)));
         return "index";
     }
 
     @PostMapping("/guess")
     public String guess(
             Model model,
-            HttpSession httpSession,
+            HttpSession session,
             @RequestParam("guess") String guess
     ) {
         try {
             int number = Integer.parseInt(guess);
             guess = String.format("%03d",number);
 
-            if (getPuzzle(httpSession).isCorrectGuess(number)) {
-                processCorrectGuess(model, httpSession);
+            if (getPuzzle(session).isCorrectGuess(number)) {
+                processCorrectGuess(model, session);
             } else {
-                processIncorrectGuess(model, httpSession, guess);
+                processIncorrectGuess(model, session, guess);
             }
         } catch (Exception e) {
             model.addAttribute("result",
@@ -80,67 +80,67 @@ public class IndexController extends AbstractController {
     }
 
     @RequestMapping(value = {"","/","/index","/index.html"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public String index(HttpSession httpSession) {
-        generateNewPuzzle(httpSession);
+    public String index(HttpSession session) {
+        generateNewPuzzle(session);
 
         return "index";
     }
 
-    private void generateNewPuzzle(HttpSession httpSession) {
-        Player player = getPlayer(httpSession);
+    private void generateNewPuzzle(HttpSession session) {
+        Player player = getPlayer(session);
         LOG.info(String.format("Generating new puzzle for %s",player));
-        updatePuzzle(httpSession, puzzleService.generateNewPuzzle(player));
+        updatePuzzle(session, puzzleService.generateNewPuzzle(player));
     }
 
-    private List<Integer> getAnswer(HttpSession httpSession) {
-        return getPuzzle(httpSession).getAnswer();
+    private List<Integer> getAnswer(HttpSession session) {
+        return getPuzzle(session).getAnswer();
     }
 
-    private Puzzle getPuzzle(HttpSession httpSession) {
-        return (Puzzle) httpSession.getAttribute("puzzle");
+    private Puzzle getPuzzle(HttpSession session) {
+        return (Puzzle) session.getAttribute("puzzle");
     }
 
-    private void incrementCheatCount(HttpSession httpSession) {
-        Player player = getPlayer(httpSession);
+    private void incrementCheatCount(HttpSession session) {
+        Player player = getPlayer(session);
         player = playerService.incrementCheatCount(player);
-        updatePlayer(httpSession, player);
+        updatePlayer(session, player);
     }
 
-    private void incrementCorrectGuessCount(HttpSession httpSession) {
-        Player player = getPlayer(httpSession);
+    private void incrementCorrectGuessCount(HttpSession session) {
+        Player player = getPlayer(session);
         player = playerService.incrementCorrectGuessCount(player);
-        updatePlayer(httpSession, player);
+        updatePlayer(session, player);
     }
 
-    private void incrementIncorrectGuessCount(HttpSession httpSession) {
-        Player player = getPlayer(httpSession);
+    private void incrementIncorrectGuessCount(HttpSession session) {
+        Player player = getPlayer(session);
         player = playerService.incrementIncorrectGuessCount(player);
-        updatePlayer(httpSession, player);
+        updatePlayer(session, player);
     }
 
-    private void incrementShowAnswerCount(HttpSession httpSession) {
-        Player player = getPlayer(httpSession);
+    private void incrementShowAnswerCount(HttpSession session) {
+        Player player = getPlayer(session);
         player = playerService.incrementShowAnswerCount(player);
-        updatePlayer(httpSession, player);
+        updatePlayer(session, player);
     }
 
-    private void processCorrectGuess(Model model, HttpSession httpSession) {
-        LOG.info(String.format("%s guessed correctly",getPlayer(httpSession)));
-        incrementCorrectGuessCount(httpSession);
+    private void processCorrectGuess(Model model, HttpSession session) {
+        LOG.info(String.format("%s guessed correctly",getPlayer(session)));
+        incrementCorrectGuessCount(session);
         model.addAttribute("answer",
-                String.format("The answer is: %s",getAnswer(httpSession)));
+                String.format("The answer is: %s",getAnswer(session)));
         model.addAttribute("result",
                 "You guessed correctly!");
     }
 
-    private void processIncorrectGuess(Model model, HttpSession httpSession, String guess) {
-        LOG.info(String.format("%s guessed incorrectly",getPlayer(httpSession)));
-        incrementIncorrectGuessCount(httpSession);
+    private void processIncorrectGuess(Model model, HttpSession session, String guess) {
+        LOG.info(String.format("%s guessed incorrectly",getPlayer(session)));
+        incrementIncorrectGuessCount(session);
         model.addAttribute("result",
                 String.format("%s is not the correct answer - try again",guess));
     }
 
-    private void updatePuzzle(HttpSession httpSession, Puzzle puzzle) {
-        httpSession.setAttribute("puzzle", puzzle);
+    private void updatePuzzle(HttpSession session, Puzzle puzzle) {
+        session.setAttribute("puzzle", puzzle);
     }
 }
