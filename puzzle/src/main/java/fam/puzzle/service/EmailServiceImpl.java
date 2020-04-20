@@ -2,10 +2,14 @@ package fam.puzzle.service;
 
 
 import fam.puzzle.domain.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,6 +17,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class EmailServiceImpl implements EmailService {
+    private static final Logger LOG = LoggerFactory.getLogger(EmailServiceImpl.class);
+
     private final ExecutorService executorService;
     private final JavaMailSender javaMailSender;
     private final String primaryEmailAddress;
@@ -26,9 +32,18 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendPuzzleLeaderChangeEmail(List<Player> players) {
-        SimpleMailMessage message = getPlayerRankingEmailMessage(players);
-        executorService.submit(() -> javaMailSender.send(message));
+    public void sendAdminEmail(String subject, String text) {
+        sendMessage(subject, text, primaryEmailAddress);
+    }
+
+    @Override
+    public void sendPuzzleLeaderChangeEmail(List<Player> players) {        SimpleMailMessage message = new SimpleMailMessage();
+        String subject = "Number Puzzle Rankings - New Leader!";
+        String text = getPlayerRankingEmailMessageBody(players);
+        String to = primaryEmailAddress;
+        String[] bcc = getPlayerRankingEmailMessageBccAddresses(players);
+
+        executorService.submit(() -> sendMessage(subject,text,to,bcc));
     }
 
     private SimpleMailMessage getPlayerRankingEmailMessage(List<Player> players) {
@@ -67,6 +82,35 @@ public class EmailServiceImpl implements EmailService {
         return players.stream()
                 .filter(Player::isReceiveEmails)
                 .collect(Collectors.toList());
+    }
+
+    private void sendMessage(String subject, String text, String to) {
+        sendMessage(subject, text, to, null);
+    }
+
+    private void sendMessage(String subject, String text, String to, String[] bcc) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setSubject(subject);
+        message.setText(text);
+        message.setTo(to);
+
+        if (bcc != null) {
+            message.setBcc(bcc);
+        }
+
+        sendMessage(message);
+    }
+
+    private void sendMessage(SimpleMailMessage message) {
+        try {
+            String subject = message.getSubject();
+            String to = (message.getTo() == null) ? "Unknown" : Arrays.asList(message.getTo()).toString();
+            String bcc = (message.getBcc() == null) ? "N/A" : Arrays.asList(message.getBcc()).toString();
+            LOG.info(String.format("Sending message (%s) to (%s) BCC (%s)",subject,to,bcc));
+            javaMailSender.send(message);
+        } catch (MailException e) {
+            LOG.error("Exception occurred while sending email",e);
+        }
     }
 }
 

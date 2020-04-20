@@ -28,7 +28,16 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Player getPlayer(String name) {
-        return playerRepository.findPlayer(name);
+        Player player = playerRepository.findPlayer(name);
+
+        if (player == null) {
+            emailService.sendAdminEmail(
+                    "Number Puzzle Authentication Failure",
+                    String.format("Failed to authenticate user %s",name)
+            );
+        }
+
+        return player;
     }
 
     @Override
