@@ -1,11 +1,11 @@
-package fam.puzzle.domain;
+package fam.puzzle.generator.hint;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-public class TwoNumbersCorrectWronglyPlacedHint extends Hint {
-    public TwoNumbersCorrectWronglyPlacedHint(List<Integer> answer) {
+public class TwoNumbersCorrectOneWellPlacedHint extends Hint {
+    public TwoNumbersCorrectOneWellPlacedHint(List<Integer> answer) {
         super(answer);
     }
 
@@ -15,14 +15,15 @@ public class TwoNumbersCorrectWronglyPlacedHint extends Hint {
         Iterator<Integer> positions = getRandomlyOrderedPositions();
         int position1 = positions.next();
         int position2 = positions.next();
-        numberSequence.set(position1, answer.get(position2));
-        numberSequence.set(position2, answer.get(position1));
+        int position3 = positions.next();
+        numberSequence.set(position1, answer.get(position1));
+        numberSequence.set(position2, answer.get(position3));
         return numberSequence;
     }
 
     @Override
     protected String getHintText() {
-        return "Two numbers are correct but wrongly placed.";
+        return "Two numbers are correct but only one is well placed.";
     }
 
     @Override
@@ -30,7 +31,8 @@ public class TwoNumbersCorrectWronglyPlacedHint extends Hint {
         Set<Integer> commonNumbers = getCommonNumbers(sequence, hint);
 
         return (commonNumbers.size() == 2)
-                && commonNumbers.stream()
-                .noneMatch(number -> isSameLocation(sequence, hint, number));
+                && (commonNumbers.stream()
+                .filter(number -> isSameLocation(sequence, hint, number))
+                .count() == 1);
     }
 }

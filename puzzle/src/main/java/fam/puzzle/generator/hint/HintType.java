@@ -1,4 +1,4 @@
-package fam.puzzle.domain;
+package fam.puzzle.generator.hint;
 
 public enum HintType {
     ALL_WRONG,

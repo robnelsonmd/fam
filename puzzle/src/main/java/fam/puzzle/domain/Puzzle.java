@@ -1,5 +1,6 @@
 package fam.puzzle.domain;
 
+import fam.puzzle.generator.hint.Hint;
 import fam.puzzle.util.PuzzleUtil;
 
 import java.util.List;
