@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head :: head(title='Number Puzzle Login')">
+<head th:replace="fragments/layout :: head(title='Number Puzzle Login')">
     <title>Title</title>
 </head>
 <body>
 
-<header id="header">
-    <h1 align="center">Number Puzzle Login Page</h1>
-    <hr class="hr-primary">
-</header>
+<header th:replace="fragments/layout :: header(title='Number Puzzle Login Page')"></header>
 
 <div th:if="${param.error}">
     <div class="container">
