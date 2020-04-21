@@ -1,38 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head :: headWithTitle(title='Number Puzzle Settings')">
+<head th:replace="fragments/head :: head(title='Number Puzzle Settings')">
     <title>Title</title>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-    <div class="container">
-        <a href="index" class="navbar-brand">Number Puzzle</a>
-        <button
-                class="navbar-toggler"
-                data-toggle="collapse"
-                data-target="#navbarCollapse"
-        >
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div id="navbarCollapse" class="collapse navbar-collapse">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a href="index" class="nav-link">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a href="players" class="nav-link">Players</a>
-                </li>
-                <li class="nav-item active">
-                    <a href="settings" class="nav-link">Settings</a>
-                </li>
-                <li class="nav-item">
-                    <a href="logout" class="nav-link">Logout</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<div th:replace="fragments/navbar :: navbar(page='settings')">Navbar</div>
 
 <header id="header">
     <h1 align="center">Number Puzzle Settings Page</h1>
