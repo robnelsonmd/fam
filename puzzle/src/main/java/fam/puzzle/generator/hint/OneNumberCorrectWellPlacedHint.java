@@ -1,9 +1,8 @@
 package fam.puzzle.generator.hint;
 
 import java.util.List;
-import java.util.Set;
 
-public class OneNumberCorrectWellPlacedHint extends Hint {
+public class OneNumberCorrectWellPlacedHint extends NumberSequenceHint {
     public static class Builder extends Hint.Builder<OneNumberCorrectWellPlacedHint, OneNumberCorrectWellPlacedHint.Builder> {
         public Builder(List<Integer> answer) {
             super(answer);
@@ -16,7 +15,7 @@ public class OneNumberCorrectWellPlacedHint extends Hint {
     }
 
     protected OneNumberCorrectWellPlacedHint(Builder builder) {
-        super(builder);
+        super(builder, 1, 1);
     }
 
     public static OneNumberCorrectWellPlacedHint.Builder builder(List<Integer> answer) {
@@ -34,13 +33,5 @@ public class OneNumberCorrectWellPlacedHint extends Hint {
     @Override
     protected String getHintText() {
         return "One number is correct and well placed.";
-    }
-
-    @Override
-    protected boolean isPossibleMatch(List<Integer> sequence, List<Integer> hint) {
-        Set<Integer> commonNumbers = getCommonNumbers(sequence, hint);
-
-        return (commonNumbers.size() == 1)
-                && isSameLocation(sequence, hint, commonNumbers.iterator().next());
     }
 }

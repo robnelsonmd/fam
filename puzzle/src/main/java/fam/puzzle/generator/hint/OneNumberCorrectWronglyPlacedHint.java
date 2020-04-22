@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-public class OneNumberCorrectWronglyPlacedHint extends Hint {
+public class OneNumberCorrectWronglyPlacedHint extends NumberSequenceHint {
     public static class Builder extends Hint.Builder<OneNumberCorrectWronglyPlacedHint, OneNumberCorrectWronglyPlacedHint.Builder> {
         public Builder(List<Integer> answer) {
             super(answer);
@@ -17,7 +17,7 @@ public class OneNumberCorrectWronglyPlacedHint extends Hint {
     }
 
     protected OneNumberCorrectWronglyPlacedHint(Builder builder) {
-        super(builder);
+        super(builder, 1, 0);
     }
 
     public static Builder builder(List<Integer> answer) {
@@ -37,13 +37,5 @@ public class OneNumberCorrectWronglyPlacedHint extends Hint {
     @Override
     protected String getHintText() {
         return "One number is correct but wrongly placed.";
-    }
-
-    @Override
-    protected boolean isPossibleMatch(List<Integer> sequence, List<Integer> hint) {
-        Set<Integer> commonNumbers = getCommonNumbers(sequence, hint);
-
-        return (commonNumbers.size() == 1)
-                && !isSameLocation(sequence, hint, commonNumbers.iterator().next());
     }
 }
