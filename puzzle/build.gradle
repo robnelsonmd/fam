@@ -4,7 +4,7 @@ plugins {
     id 'java'
 }
 
-version = '4.2-SNAPSHOT'
+version = '4.3'
 sourceCompatibility = '8'
 
 configurations {
@@ -30,6 +30,12 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+processResources {
+    filesMatching('application.properties') {
+        expand(project.properties)
     }
 }
 

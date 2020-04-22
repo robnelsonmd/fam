@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+>
 <head th:fragment="head(title)">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,6 +16,7 @@
 
 <header th:fragment="header(title)" id="header">
     <h1 align="center" th:text="${title}">Title</h1>
+    <h4 th:if="${applicationVersion}" align="center" th:text="'Version ' + ${applicationVersion}">Title</h4>
     <hr class="hr-primary">
 </header>
 

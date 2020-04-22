@@ -16,7 +16,9 @@ public class PlayersController extends AbstractController {
 
     private final PlayerService playerService;
 
-    public PlayersController(PlayerService playerService) {
+    public PlayersController(String applicationVersion,
+                             PlayerService playerService) {
+        super(applicationVersion);
         this.playerService = playerService;
     }
 

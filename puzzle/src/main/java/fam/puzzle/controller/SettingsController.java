@@ -18,7 +18,9 @@ public class SettingsController extends AbstractController {
 
     private final PlayerService playerService;
 
-    public SettingsController(PlayerService playerService) {
+    public SettingsController(String applicationVersion,
+                              PlayerService playerService) {
+        super(applicationVersion);
         this.playerService = playerService;
     }
 

@@ -26,8 +26,10 @@ public class IndexController extends AbstractController {
     private final PlayerService playerService;
     private final PuzzleService puzzleService;
 
-    public IndexController(PlayerService playerService,
+    public IndexController(String applicationVersion,
+                           PlayerService playerService,
                            PuzzleService puzzleService) {
+        super(applicationVersion);
         this.playerService = playerService;
         this.puzzleService = puzzleService;
     }
