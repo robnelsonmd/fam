@@ -19,7 +19,7 @@ public class PuzzleServiceImpl implements PuzzleService {
 
     @Override
     public Puzzle generateNewPuzzle(Player player) {
-        Puzzle puzzle = puzzleGenerator.generateThreeDigitPuzzle();
+        Puzzle puzzle = puzzleGenerator.generatePuzzle(3);
         puzzleMap.put(player, puzzle);
         return puzzle;
     }
