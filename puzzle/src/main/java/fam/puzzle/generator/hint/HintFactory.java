@@ -9,16 +9,28 @@ public final class HintFactory {
                 return AllNumbersIncorrectHint.builder(answer).build();
 
             case ONE_RIGHT_CORRECT_POSITION:
-                return OneNumberCorrectWellPlacedHint.builder(answer).build();
+                return NumberSequenceHint.builder(answer)
+                        .numberOfCorrectDigits(1)
+                        .numberOfCorrectPlacements(1)
+                        .build();
 
             case ONE_RIGHT_INCORRECT_POSITION:
-                return OneNumberCorrectWronglyPlacedHint.builder(answer).build();
+                return NumberSequenceHint.builder(answer)
+                        .numberOfCorrectDigits(1)
+                        .numberOfCorrectPlacements(0)
+                        .build();
 
             case TWO_RIGHT_ONE_CORRECT_POSITION:
-                return TwoNumbersCorrectOneWellPlacedHint.builder(answer).build();
+                return NumberSequenceHint.builder(answer)
+                        .numberOfCorrectDigits(2)
+                        .numberOfCorrectPlacements(1)
+                        .build();
 
             case TWO_RIGHT_INCORRECT_POSITION:
-                return TwoNumbersCorrectWronglyPlacedHint.builder(answer).build();
+                return NumberSequenceHint.builder(answer)
+                        .numberOfCorrectDigits(2)
+                        .numberOfCorrectPlacements(0)
+                        .build();
 
             default:
                 throw new IllegalArgumentException("Invalid Hint Type: " + hintType);

@@ -9,14 +9,37 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public abstract class NumberSequenceHint extends Hint {
-    private final int numberOfCorrectDigits;
-    private final int numberOfCorrectPlacements;
+public class NumberSequenceHint extends Hint {
+    public static class Builder extends Hint.Builder<NumberSequenceHint, NumberSequenceHint.Builder> {
+        public Builder(List<Integer> answer) {
+            super(answer);
+        }
 
-    public NumberSequenceHint(Builder builder, int numberOfCorrectDigits, int numberOfCorrectPlacements) {
+        public Builder numberOfCorrectDigits(int numberOfCorrectDigits) {
+            hint.numberOfCorrectDigits = numberOfCorrectDigits;
+            return this;
+        }
+
+        public Builder numberOfCorrectPlacements(int numberOfCorrectPlacements) {
+            hint.numberOfCorrectPlacements = numberOfCorrectPlacements;
+            return this;
+        }
+
+        @Override
+        protected NumberSequenceHint newHint() {
+            return new NumberSequenceHint(this);
+        }
+    }
+
+    private int numberOfCorrectDigits;
+    private int numberOfCorrectPlacements;
+
+    protected NumberSequenceHint(Builder builder) {
         super(builder);
-        this.numberOfCorrectDigits = numberOfCorrectDigits;
-        this.numberOfCorrectPlacements = numberOfCorrectPlacements;
+    }
+
+    public static Builder builder(List<Integer> answer) {
+        return new Builder(answer);
     }
 
     @Override

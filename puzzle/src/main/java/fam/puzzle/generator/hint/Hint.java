@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
 public abstract class Hint {
     public static abstract class Builder<H extends Hint, B extends Builder<H,B>> {
         private final List<Integer> answer = new ArrayList<>();
-        private final H hint;
+        protected final H hint;
 
         public Builder(List<Integer> answer) {
             this.answer.addAll(answer);
