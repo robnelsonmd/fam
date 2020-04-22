@@ -4,6 +4,7 @@ import fam.puzzle.domain.Player;
 import fam.puzzle.domain.Puzzle;
 import fam.puzzle.service.PlayerService;
 import fam.puzzle.service.PuzzleService;
+import fam.puzzle.util.PuzzleUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -70,11 +71,11 @@ public class IndexController extends AbstractController {
     ) {
         try {
             int number = Integer.parseInt(guess);
-            guess = String.format("%03d",number);
 
             if (getPuzzle(session).isCorrectGuess(number)) {
                 processCorrectGuess(model, session);
             } else {
+                guess = PuzzleUtil.getFormattedNumberString(number, getPuzzle(session).getPuzzleSize());
                 processIncorrectGuess(model, session, guess);
             }
         } catch (Exception e) {
@@ -106,7 +107,7 @@ public class IndexController extends AbstractController {
     private void generateNewPuzzle(HttpSession session) {
         Player player = getPlayer(session);
         LOG.info(String.format("Generating new puzzle for %s",player));
-        updatePuzzle(session, puzzleService.generateNewPuzzle(player));
+        updatePuzzle(session, puzzleService.generateNewPuzzle(player, 3));
     }
 
     private List<Integer> getAnswer(HttpSession session) {

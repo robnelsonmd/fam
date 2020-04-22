@@ -18,8 +18,8 @@ public class PuzzleServiceImpl implements PuzzleService {
     }
 
     @Override
-    public Puzzle generateNewPuzzle(Player player) {
-        Puzzle puzzle = puzzleGenerator.generatePuzzle(3);
+    public Puzzle generateNewPuzzle(Player player, int size) {
+        Puzzle puzzle = puzzleGenerator.generatePuzzle(size);
         puzzleMap.put(player, puzzle);
         return puzzle;
     }

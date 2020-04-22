@@ -33,14 +33,13 @@ public abstract class Hint {
 
     public void initialize(List<Integer> answer) {
         this.hint = generateHint(answer);
-        this.possibleMatches = generatePossibleMatches(hint);
+        this.possibleMatches = generatePossibleMatches(hint, answer.size());
 
         if (!this.getPossibleMatches().contains(answer)) {
             System.out.println("XXX");
             System.out.println(this);
             System.out.println("answer = " + answer);
             System.out.println("this.possibleMatches.size() = " + this.possibleMatches.size());
-            this.possibleMatches.forEach(System.out::println);
             System.exit(1);
         }
     }
@@ -76,14 +75,13 @@ public abstract class Hint {
 
     protected boolean isSameLocation(List<Integer> sequence, List<Integer> hint, Integer number) {
         return sequence.contains(number)
-                && hint.contains(number)
                 && (sequence.indexOf(number) == hint.indexOf(number));
     }
 
     protected abstract boolean isPossibleMatch(List<Integer> sequence, List<Integer> hint);
 
-    private Set<List<Integer>> generatePossibleMatches(final List<Integer> hint) {
-        return PuzzleUtil.getAllPossibleNumberSequences().stream()
+    private Set<List<Integer>> generatePossibleMatches(final List<Integer> hint, int numberOfDigits) {
+        return PuzzleUtil.getAllPossibleNumberSequences(numberOfDigits).stream()
                 .filter(sequence -> isPossibleMatch(sequence, hint))
                 .collect(Collectors.toSet());
     }

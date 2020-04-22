@@ -2,10 +2,7 @@ package fam.puzzle.generator.hint;
 
 import fam.core.util.StringUtil;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -131,7 +128,7 @@ public class NumberSequenceHint extends Hint {
 
             numberSequence.set(position1, answer.get(position2));
 
-            if (numberOfIncorrectlyPlacedDigits > 1) {
+            if ((numberOfIncorrectlyPlacedDigits - i) > 1) {
                 numberSequence.set(position2, answer.get(position1));
             }
         }
