@@ -45,7 +45,6 @@ public class IndexController extends AbstractController {
             LOG.info(String.format("%s showed the answer",getPlayer(session)));
             incrementShowAnswerCount(session);
             model.addAttribute("answer", getAnswer(session));
-            generateNewPuzzle(session);
         }
 
         if (newPuzzle.isPresent()) {
