@@ -5,8 +5,23 @@ import java.util.List;
 import java.util.Set;
 
 public class TwoNumbersCorrectWronglyPlacedHint extends Hint {
-    public TwoNumbersCorrectWronglyPlacedHint(List<Integer> answer) {
-        super(answer);
+    public static class Builder extends Hint.Builder<TwoNumbersCorrectWronglyPlacedHint, TwoNumbersCorrectWronglyPlacedHint.Builder> {
+        public Builder(List<Integer> answer) {
+            super(answer);
+        }
+
+        @Override
+        protected TwoNumbersCorrectWronglyPlacedHint newHint() {
+            return new TwoNumbersCorrectWronglyPlacedHint(this);
+        }
+    }
+
+    protected TwoNumbersCorrectWronglyPlacedHint(Builder builder) {
+        super(builder);
+    }
+
+    public static Builder builder(List<Integer> answer) {
+        return new Builder(answer);
     }
 
     @Override

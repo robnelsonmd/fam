@@ -6,19 +6,19 @@ public final class HintFactory {
     public static Hint createHint(HintType hintType, List<Integer> answer) {
         switch (hintType) {
             case ALL_WRONG:
-                return new AllNumbersIncorrectHint(answer);
+                return AllNumbersIncorrectHint.builder(answer).build();
 
             case ONE_RIGHT_CORRECT_POSITION:
-                return new OneNumberCorrectWellPlacedHint(answer);
+                return OneNumberCorrectWellPlacedHint.builder(answer).build();
 
             case ONE_RIGHT_INCORRECT_POSITION:
-                return new OneNumberCorrectWronglyPlacedHint(answer);
+                return OneNumberCorrectWronglyPlacedHint.builder(answer).build();
 
             case TWO_RIGHT_ONE_CORRECT_POSITION:
-                return new TwoNumbersCorrectOneWellPlacedHint(answer);
+                return TwoNumbersCorrectOneWellPlacedHint.builder(answer).build();
 
             case TWO_RIGHT_INCORRECT_POSITION:
-                return new TwoNumbersCorrectWronglyPlacedHint(answer);
+                return TwoNumbersCorrectWronglyPlacedHint.builder(answer).build();
 
             default:
                 throw new IllegalArgumentException("Invalid Hint Type: " + hintType);

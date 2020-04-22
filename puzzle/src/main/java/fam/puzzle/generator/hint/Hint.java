@@ -7,10 +7,31 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public abstract class Hint {
-    private final List<Integer> hint;
-    private final Set<List<Integer>> possibleMatches;
+    public static abstract class Builder<H extends Hint, B extends Builder<H,B>> {
+        private final List<Integer> answer = new ArrayList<>();
+        private final H hint;
 
-    public Hint(List<Integer> answer) {
+        public Builder(List<Integer> answer) {
+            this.answer.addAll(answer);
+            this.hint = newHint();
+        }
+
+        public H build() {
+            hint.initialize(answer);
+
+            return hint;
+        }
+
+        protected abstract H newHint();
+    }
+
+    private List<Integer> hint;
+    private Set<List<Integer>> possibleMatches;
+
+    protected Hint(Builder builder) {
+    }
+
+    public void initialize(List<Integer> answer) {
         this.hint = generateHint(answer);
         this.possibleMatches = generatePossibleMatches(hint);
 

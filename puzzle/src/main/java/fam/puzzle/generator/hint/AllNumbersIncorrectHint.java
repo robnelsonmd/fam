@@ -3,8 +3,23 @@ package fam.puzzle.generator.hint;
 import java.util.List;
 
 public class AllNumbersIncorrectHint extends Hint {
-    public AllNumbersIncorrectHint(List<Integer> answer) {
-        super(answer);
+    public static class Builder extends Hint.Builder<AllNumbersIncorrectHint,Builder> {
+        public Builder(List<Integer> answer) {
+            super(answer);
+        }
+
+        @Override
+        protected AllNumbersIncorrectHint newHint() {
+            return new AllNumbersIncorrectHint(this);
+        }
+    }
+
+    protected AllNumbersIncorrectHint(Builder builder) {
+        super(builder);
+    }
+
+    public static Builder builder(List<Integer> answer) {
+        return new Builder(answer);
     }
 
     @Override

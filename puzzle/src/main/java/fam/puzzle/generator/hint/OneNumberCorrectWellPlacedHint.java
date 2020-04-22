@@ -4,8 +4,23 @@ import java.util.List;
 import java.util.Set;
 
 public class OneNumberCorrectWellPlacedHint extends Hint {
-    public OneNumberCorrectWellPlacedHint(List<Integer> answer) {
-        super(answer);
+    public static class Builder extends Hint.Builder<OneNumberCorrectWellPlacedHint, OneNumberCorrectWellPlacedHint.Builder> {
+        public Builder(List<Integer> answer) {
+            super(answer);
+        }
+
+        @Override
+        protected OneNumberCorrectWellPlacedHint newHint() {
+            return new OneNumberCorrectWellPlacedHint(this);
+        }
+    }
+
+    protected OneNumberCorrectWellPlacedHint(Builder builder) {
+        super(builder);
+    }
+
+    public static OneNumberCorrectWellPlacedHint.Builder builder(List<Integer> answer) {
+        return new OneNumberCorrectWellPlacedHint.Builder(answer);
     }
 
     @Override
