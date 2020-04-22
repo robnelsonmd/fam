@@ -21,9 +21,4 @@ public class TwoNumbersCorrectOneWellPlacedHint extends NumberSequenceHint {
     public static Builder builder(List<Integer> answer) {
         return new Builder(answer);
     }
-
-    @Override
-    protected String getHintText() {
-        return "Two numbers are correct but only one is well placed.";
-    }
 }

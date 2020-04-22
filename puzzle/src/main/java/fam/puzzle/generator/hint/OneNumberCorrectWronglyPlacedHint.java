@@ -21,9 +21,4 @@ public class OneNumberCorrectWronglyPlacedHint extends NumberSequenceHint {
     public static Builder builder(List<Integer> answer) {
         return new Builder(answer);
     }
-
-    @Override
-    protected String getHintText() {
-        return "One number is correct but wrongly placed.";
-    }
 }

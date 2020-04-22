@@ -21,9 +21,4 @@ public class OneNumberCorrectWellPlacedHint extends NumberSequenceHint {
     public static OneNumberCorrectWellPlacedHint.Builder builder(List<Integer> answer) {
         return new OneNumberCorrectWellPlacedHint.Builder(answer);
     }
-
-    @Override
-    protected String getHintText() {
-        return "One number is correct and well placed.";
-    }
 }
