@@ -1,8 +1,6 @@
 package fam.puzzle.generator.hint;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 public class OneNumberCorrectWronglyPlacedHint extends NumberSequenceHint {
     public static class Builder extends Hint.Builder<OneNumberCorrectWronglyPlacedHint, OneNumberCorrectWronglyPlacedHint.Builder> {
@@ -22,16 +20,6 @@ public class OneNumberCorrectWronglyPlacedHint extends NumberSequenceHint {
 
     public static Builder builder(List<Integer> answer) {
         return new Builder(answer);
-    }
-
-    @Override
-    protected List<Integer> generateHint(List<Integer> answer) {
-        List<Integer> numberSequence = getInvalidNumberSequence(answer);
-        Iterator<Integer> positions = getRandomlyOrderedPositions();
-        int correctPosition = positions.next();
-        int incorrectPosition = positions.next();
-        numberSequence.set(incorrectPosition, answer.get(correctPosition));
-        return numberSequence;
     }
 
     @Override

@@ -71,13 +71,7 @@ public abstract class Hint {
                 .collect(Collectors.toList());
 
         Collections.shuffle(numberList);
-        return numberList.subList(0,3);
-    }
-
-    protected Iterator<Integer> getRandomlyOrderedPositions() {
-        List<Integer> positions = Arrays.asList(0,1,2);
-        Collections.shuffle(positions);
-        return positions.iterator();
+        return numberList.subList(0,answer.size());
     }
 
     protected boolean isSameLocation(List<Integer> sequence, List<Integer> hint, Integer number) {

@@ -23,14 +23,6 @@ public class OneNumberCorrectWellPlacedHint extends NumberSequenceHint {
     }
 
     @Override
-    protected List<Integer> generateHint(List<Integer> answer) {
-        List<Integer> numberSequence = getInvalidNumberSequence(answer);
-        int correctPosition = getRandomlyOrderedPositions().next();
-        numberSequence.set(correctPosition, answer.get(correctPosition));
-        return numberSequence;
-    }
-
-    @Override
     protected String getHintText() {
         return "One number is correct and well placed.";
     }
