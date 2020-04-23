@@ -11,20 +11,20 @@
 
 <section id="settings">
     <div class="container">
-        <form action="/settings" method="post">
+        <form th:action="@{/settings}" th:object="${player}" method="post">
             <div class="row">
                 <label>Name:
-                    <span th:text="${session.player.name}"></span>
+                    <span th:text="*{name}"></span>
                 </label>
             </div>
             <div class="row">
                 <label>Email Address:
-                    <input type="email" name="emailAddress" size="50" th:value="${session.player.emailAddress}"/>
+                    <input type="email" name="emailAddress" size="50" th:value="*{emailAddress}"/>
                 </label>
             </div>
             <div class="row">
                 <label>Receive Emails:
-                    <input type="checkbox" name="receiveEmails" th:checked="${session.player.receiveEmails}"/>
+                    <input type="checkbox" name="receiveEmails" th:checked="*{receiveEmails}"/>
                 </label>
             </div>
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>

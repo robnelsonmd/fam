@@ -5,12 +5,13 @@ import fam.puzzle.service.PlayerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
+import java.util.Objects;
 
 @Controller
 public class SettingsController extends AbstractController {
@@ -25,28 +26,28 @@ public class SettingsController extends AbstractController {
     }
 
     @GetMapping("/settings")
-    public String settingsGet(HttpSession session) {
-        LOG.info(String.format("%s visited the settings page",getPlayer(session)));
+    public String settingsGet(Model model, HttpSession session) {
+        Player player = getPlayer(session);
+        LOG.info(String.format("%s visited the settings page",player));
+        model.addAttribute("player", player);
         return "settings";
     }
 
     @PostMapping("/settings")
     public String settingsPost(
-            HttpSession session,
-            @RequestParam("emailAddress") String emailAddress,
-            @RequestParam("receiveEmails") Optional<Boolean> receiveEmails
+            @ModelAttribute Player updatedPlayer,
+            HttpSession session
     ) {
         Player player = getPlayer(session);
 
-        if (!player.getEmailAddress().equals(emailAddress)) {
-            LOG.info(String.format("%s updated their email to %s",player.getName(),emailAddress));
-            player = playerService.updateEmailAddress(player, emailAddress);
+        if (!Objects.equals(player.getEmailAddress(), updatedPlayer.getEmailAddress())) {
+            LOG.info(String.format("%s updated their email to %s",player,updatedPlayer.getEmailAddress()));
+            player = playerService.updateEmailAddress(player, updatedPlayer.getEmailAddress());
         }
 
-        boolean newReceiveEmailsSetting = receiveEmails.orElse(false);
-        if (player.isReceiveEmails() != newReceiveEmailsSetting) {
-            LOG.info(String.format("%s updated their receive emails setting to %s",player.getName(),newReceiveEmailsSetting));
-            player = playerService.updateReceiveEmails(player, newReceiveEmailsSetting);
+        if (player.isReceiveEmails() != updatedPlayer.isReceiveEmails()) {
+            LOG.info(String.format("%s updated their receive emails setting to %s",player,updatedPlayer.isReceiveEmails()));
+            player = playerService.updateReceiveEmails(player, updatedPlayer.isReceiveEmails());
         }
 
         updatePlayer(session, player);

@@ -1,6 +1,5 @@
 package fam.puzzle.domain;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,165 +8,108 @@ import fam.puzzle.security.PuzzleGrantedAuthority;
 import fam.puzzle.security.PuzzleUser;
 
 import java.io.Serializable;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
 
 public class Player extends PuzzleUser implements Serializable {
     private static final long serialVersionUID = 3790114787071542585L;
 
-    public static class Builder {
-        private final String name;
-        private final List<PuzzleGrantedAuthority> authorities = new ArrayList<>();
-        private String emailAddress;
-        private boolean receiveEmails;
-        private int cheatCount;
-        private int correctFourDigitGuessCount;
-        private int correctThreeDigitGuessCount;
-        private int incorrectFourDigitGuessCount;
-        private int incorrectThreeDigitGuessCount;
-        private int showAnswerCount;
-
-        private Builder(Player player) {
-            this.name = player.getName();
-            this.authorities.addAll(player.getAuthorities().stream().map(a -> (PuzzleGrantedAuthority)a).collect(Collectors.toList()));
-            this.emailAddress =  player.emailAddress;
-            this.receiveEmails = player.receiveEmails;
-            this.cheatCount =  player.cheatCount;
-            this.correctFourDigitGuessCount =  player.correctFourDigitGuessCount;
-            this.correctThreeDigitGuessCount =  player.correctThreeDigitGuessCount;
-            this.incorrectFourDigitGuessCount =  player.incorrectFourDigitGuessCount;
-            this.incorrectThreeDigitGuessCount =  player.incorrectThreeDigitGuessCount;
-            this.showAnswerCount =  player.showAnswerCount;
-        }
-
-        public Builder updateEmailAddress(String emailAddress) {
-            this.emailAddress = emailAddress;
-            return this;
-        }
-
-        public Builder updateReceiveEmails(boolean receiveEmails) {
-            this.receiveEmails = receiveEmails;
-            return this;
-        }
-
-        public Builder incrementCheatCount() {
-            this.cheatCount++;
-            return this;
-        }
-
-        public Builder incrementFourDigitCorrectGuessCount() {
-            this.correctFourDigitGuessCount++;
-            return this;
-        }
-
-        public Builder incrementFourDigitIncorrectGuessCount() {
-            this.incorrectFourDigitGuessCount++;
-            return this;
-        }
-
-        public Builder incrementThreeDigitCorrectGuessCount() {
-            this.correctThreeDigitGuessCount++;
-            return this;
-        }
-
-        public Builder incrementThreeDigitIncorrectGuessCount() {
-            this.incorrectThreeDigitGuessCount++;
-            return this;
-        }
-
-        public Builder incrementShowAnswerCount() {
-            this.showAnswerCount++;
-            return this;
-        }
-
-        public Player build() {
-            return new Player(
-                    name,
-                    authorities,
-                    emailAddress,
-                    receiveEmails,
-                    cheatCount,
-                    correctThreeDigitGuessCount,
-                    incorrectThreeDigitGuessCount,
-                    correctFourDigitGuessCount,
-                    incorrectFourDigitGuessCount,
-                    showAnswerCount
-            );
-        }
-    }
-
-    private final String emailAddress;
-    private final boolean receiveEmails;
-    private final int cheatCount;
-    private final int correctFourDigitGuessCount;
-    private final int correctThreeDigitGuessCount;
-    private final int incorrectFourDigitGuessCount;
-    private final int incorrectThreeDigitGuessCount;
-    private final int showAnswerCount;
+    private String emailAddress;
+    private boolean receiveEmails;
+    private int cheatCount;
+    private int correctFourDigitGuessCount;
+    private int correctThreeDigitGuessCount;
+    private int incorrectFourDigitGuessCount;
+    private int incorrectThreeDigitGuessCount;
+    private int showAnswerCount;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public Player(
             @JsonProperty("name") String name,
-            @JsonProperty("authorities") Collection<PuzzleGrantedAuthority> authorities,
-            @JsonProperty("emailAddress") String emailAddress,
-            @JsonProperty("receiveEmails") boolean receiveEmails,
-            @JsonProperty("cheatCount") int cheatCount,
-            @JsonProperty("correctGuessCount")
-            @JsonAlias({"correctGuessCount","correctThreeDigitGuessCount"})
-                    int correctThreeDigitGuessCount,
-            @JsonProperty("incorrectGuessCount")
-            @JsonAlias({"incorrectGuessCount", "incorrectThreeDigitGuessCount"})
-                    int incorrectThreeDigitGuessCount,
-            @JsonProperty("correctFourDigitGuessCount") int correctFourDigitGuessCount,
-            @JsonProperty("incorrectFourDigitGuessCount") int incorrectFourDigitGuessCount,
-            @JsonProperty("showAnswerCount") int showAnswerCount
-    ) {
+            @JsonProperty("authorities") Collection<PuzzleGrantedAuthority> authorities)
+    {
         super(name, authorities);
 
         if (StringUtil.isEmptyString(name)) {
-            throw new IllegalArgumentException(String.format("Invalid player name (%s)",name));
+            throw new IllegalArgumentException(String.format("Invalid player name (%s)", name));
         }
-
-        this.emailAddress = emailAddress;
-        this.receiveEmails = receiveEmails;
-        this.cheatCount = cheatCount;
-        this.correctThreeDigitGuessCount = correctThreeDigitGuessCount;
-        this.incorrectThreeDigitGuessCount = incorrectThreeDigitGuessCount;
-        this.correctFourDigitGuessCount = correctFourDigitGuessCount;
-        this.incorrectFourDigitGuessCount = incorrectFourDigitGuessCount;
-        this.showAnswerCount = showAnswerCount;
     }
 
     public Player(String name) {
-        this(name, Collections.singletonList(new PuzzleGrantedAuthority("USER")), "", false, 0, 0, 0, 0, 0, 0);
+        this(name, Collections.singletonList(new PuzzleGrantedAuthority("USER")));
     }
 
-    public Builder playerBuilder() {
-        return new Builder(this);
-    }
-
-    public String getName() {
-        return getUsername();
+    public Player() {
+        this("FORM-PLAYER");
     }
 
     public String getEmailAddress() {
         return emailAddress;
     }
 
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
     public boolean isReceiveEmails() {
         return receiveEmails;
+    }
+
+    public void setReceiveEmails(boolean receiveEmails) {
+        this.receiveEmails = receiveEmails;
     }
 
     public int getCheatCount() {
         return cheatCount;
     }
 
+    public void setCheatCount(int cheatCount) {
+        this.cheatCount = cheatCount;
+    }
+
     public int getCorrectFourDigitGuessCount() {
         return correctFourDigitGuessCount;
     }
 
+    public void setCorrectFourDigitGuessCount(int correctFourDigitGuessCount) {
+        this.correctFourDigitGuessCount = correctFourDigitGuessCount;
+    }
+
     public int getCorrectThreeDigitGuessCount() {
         return correctThreeDigitGuessCount;
+    }
+
+    public void setCorrectThreeDigitGuessCount(int correctThreeDigitGuessCount) {
+        this.correctThreeDigitGuessCount = correctThreeDigitGuessCount;
+    }
+
+    public int getIncorrectFourDigitGuessCount() {
+        return incorrectFourDigitGuessCount;
+    }
+
+    public void setIncorrectFourDigitGuessCount(int incorrectFourDigitGuessCount) {
+        this.incorrectFourDigitGuessCount = incorrectFourDigitGuessCount;
+    }
+
+    public int getIncorrectThreeDigitGuessCount() {
+        return incorrectThreeDigitGuessCount;
+    }
+
+    public void setIncorrectThreeDigitGuessCount(int incorrectThreeDigitGuessCount) {
+        this.incorrectThreeDigitGuessCount = incorrectThreeDigitGuessCount;
+    }
+
+    public int getShowAnswerCount() {
+        return showAnswerCount;
+    }
+
+    public void setShowAnswerCount(int showAnswerCount) {
+        this.showAnswerCount = showAnswerCount;
+    }
+
+    public String getName() {
+        return getUsername();
     }
 
     @JsonIgnore
@@ -182,18 +124,6 @@ public class Player extends PuzzleUser implements Serializable {
             default:
                 throw new IllegalArgumentException("Invalid puzzle size: " + size);
         }
-    }
-
-    public int getIncorrectFourDigitGuessCount() {
-        return incorrectFourDigitGuessCount;
-    }
-
-    public int getIncorrectThreeDigitGuessCount() {
-        return incorrectThreeDigitGuessCount;
-    }
-
-    public int getShowAnswerCount() {
-        return showAnswerCount;
     }
 
     @JsonIgnore

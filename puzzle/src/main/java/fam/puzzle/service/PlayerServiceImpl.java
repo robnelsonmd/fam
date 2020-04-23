@@ -56,16 +56,16 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Player incrementCheatCount(Player player) {
-        player = player.playerBuilder().incrementCheatCount().build();
+        player.setCheatCount(player.getCheatCount() + 1);
         return playerRepository.save(player);
     }
 
     @Override
     public Player incrementCorrectGuessCount(Player player, int size) {
         if (size == 3) {
-            player = player.playerBuilder().incrementThreeDigitCorrectGuessCount().build();
+            player.setCorrectThreeDigitGuessCount(player.getCorrectThreeDigitGuessCount() + 1);
         } else if (size == 4) {
-            player = player.playerBuilder().incrementFourDigitCorrectGuessCount().build();
+            player.setCorrectFourDigitGuessCount(player.getCorrectFourDigitGuessCount() + 1);
         }
         player = playerRepository.save(player);
         updateCurrentLeader(size);
@@ -75,9 +75,9 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public Player incrementIncorrectGuessCount(Player player, int size) {
         if (size == 3) {
-            player = player.playerBuilder().incrementThreeDigitIncorrectGuessCount().build();
+            player.setIncorrectThreeDigitGuessCount(player.getIncorrectThreeDigitGuessCount() + 1);
         } else if (size == 4) {
-            player = player.playerBuilder().incrementFourDigitIncorrectGuessCount().build();
+            player.setIncorrectFourDigitGuessCount(player.getIncorrectFourDigitGuessCount() + 1);
         }
         player = playerRepository.save(player);
         updateCurrentLeader(size);
@@ -86,19 +86,19 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Player incrementShowAnswerCount(Player player) {
-        player = player.playerBuilder().incrementShowAnswerCount().build();
+        player.setShowAnswerCount(player.getShowAnswerCount() + 1);
         return playerRepository.save(player);
     }
 
     @Override
     public Player updateEmailAddress(Player player, String emailAddress) {
-        player = player.playerBuilder().updateEmailAddress(emailAddress).build();
+        player.setEmailAddress(emailAddress);
         return playerRepository.save(player);
     }
 
     @Override
     public Player updateReceiveEmails(Player player, boolean receiveEmails) {
-        player = player.playerBuilder().updateReceiveEmails(receiveEmails).build();
+        player.setReceiveEmails(receiveEmails);
         return playerRepository.save(player);
     }
 
