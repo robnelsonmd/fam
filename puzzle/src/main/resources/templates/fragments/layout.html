@@ -22,7 +22,7 @@
 
 <nav th:fragment="navbar(page)" class="navbar navbar-expand-sm navbar-dark bg-dark">
     <div class="container">
-        <a href="index" class="navbar-brand">Number Puzzle</a>
+        <a href="home" class="navbar-brand">Number Puzzle</a>
         <button
                 class="navbar-toggler"
                 data-toggle="collapse"
@@ -33,7 +33,7 @@
         <div id="navbarCollapse" class="collapse navbar-collapse">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item" th:classappend="${#strings.equals(page,'index')} ? active : ''">
-                    <a href="index" class="nav-link">Home</a>
+                    <a href="home" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item" th:classappend="${#strings.equals(page,'players')} ? active : ''">
                     <a href="players" class="nav-link">Players</a>
@@ -42,7 +42,7 @@
                     <a href="settings" class="nav-link">Settings</a>
                 </li>
                 <li class="nav-item">
-                    <a href="logout" class="nav-link">Logout</a>
+                    <a href="logout" class="nav-link">Logout (<span th:text="${session.player}"></span>)</a>
                 </li>
             </ul>
         </div>

@@ -10,7 +10,7 @@ public class Puzzle {
     private final List<Hint> hints;
     private final List<Integer> answer;
     private final Set<List<Integer>> possibleMatches;
-    private final int puzzleSize;
+    private final int size;
 
     private Integer incorrectGuessCount;
 
@@ -18,7 +18,7 @@ public class Puzzle {
         this.answer = answer;
         this.hints = hints;
         this.possibleMatches = possibleMatches;
-        this.puzzleSize = answer.size();
+        this.size = answer.size();
     }
 
     public List<Integer> getAnswer() {
@@ -37,12 +37,23 @@ public class Puzzle {
         return possibleMatches;
     }
 
-    public int getPuzzleSize() {
-        return puzzleSize;
+    public int getSize() {
+        return size;
+    }
+
+    public String getSizeString() {
+        switch(size) {
+            case 3:
+                return "Three";
+            case 4:
+                return "Four";
+            default:
+                throw new IllegalStateException("Invalid size: " + size);
+        }
     }
 
     public boolean isCorrectGuess(int guess) {
-        boolean correctGuess = possibleMatches.contains(PuzzleUtil.convertToNumberSequence(guess, puzzleSize));
+        boolean correctGuess = possibleMatches.contains(PuzzleUtil.convertToNumberSequence(guess, size));
         if (!correctGuess) incorrectGuessCount = (incorrectGuessCount == null) ? 1 : (incorrectGuessCount + 1);
         return correctGuess;
     }

@@ -63,6 +63,17 @@ public class IndexController extends AbstractController {
         return "index";
     }
 
+    @GetMapping("/generatePuzzle")
+    public String generatePuzzle(
+            HttpSession session,
+            @RequestParam("size") int size
+    ) {
+        LOG.info(String.format("Generating new puzzle for %s",getPlayer(session)));
+        updatePuzzle(session, puzzleService.generateNewPuzzle(size));
+
+        return "redirect:index";
+    }
+
     @PostMapping("/guess")
     public String guess(
             Model model,
@@ -75,7 +86,7 @@ public class IndexController extends AbstractController {
             if (getPuzzle(session).isCorrectGuess(number)) {
                 processCorrectGuess(model, session);
             } else {
-                guess = PuzzleUtil.getFormattedNumberString(number, getPuzzle(session).getPuzzleSize());
+                guess = PuzzleUtil.getFormattedNumberString(number, getPuzzle(session).getSize());
                 processIncorrectGuess(model, session, guess);
             }
         } catch (Exception e) {
@@ -86,10 +97,14 @@ public class IndexController extends AbstractController {
         return "index";
     }
 
-    @RequestMapping(value = {"","/","/index","/index.html"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public String index(HttpSession session) {
-        generateNewPuzzle(session);
+    @GetMapping("/home")
+    public String home(HttpSession session) {
+        updatePuzzle(session, null);
+        return "redirect:index";
+    }
 
+    @RequestMapping(value = {"","/","/index","/index.html"}, method = {RequestMethod.GET, RequestMethod.POST})
+    public String index() {
         return "index";
     }
 
@@ -106,7 +121,8 @@ public class IndexController extends AbstractController {
 
     private void generateNewPuzzle(HttpSession session) {
         LOG.info(String.format("Generating new puzzle for %s",getPlayer(session)));
-        updatePuzzle(session, puzzleService.generateNewPuzzle(3));
+        int puzzleSize = getPuzzle(session).getSize();
+        updatePuzzle(session, puzzleService.generateNewPuzzle(puzzleSize));
     }
 
     private List<Integer> getAnswer(HttpSession session) {
