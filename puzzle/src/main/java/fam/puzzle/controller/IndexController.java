@@ -81,7 +81,7 @@ public class IndexController extends AbstractController {
             @RequestParam("guess") String guess
     ) {
         try {
-            int number = Integer.parseInt(guess);
+            int number = Integer.parseInt(guess.replaceAll("[\\[, \\]]*", ""));
 
             if (getPuzzle(session).isCorrectGuess(number)) {
                 processCorrectGuess(model, session);
