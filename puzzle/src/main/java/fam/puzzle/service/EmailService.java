@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface EmailService {
     void sendAdminEmail(String subject, String text);
-    void sendPuzzleLeaderChangeEmail(List<Player> players);
+    void sendPuzzleLeaderChangeEmail(List<Player> players, int puzzleSize);
 }

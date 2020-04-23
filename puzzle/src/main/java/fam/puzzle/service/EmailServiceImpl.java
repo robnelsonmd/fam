@@ -37,24 +37,14 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendPuzzleLeaderChangeEmail(List<Player> players) {        SimpleMailMessage message = new SimpleMailMessage();
-        String subject = "Number Puzzle Rankings - New Leader!";
-        String text = getPlayerRankingEmailMessageBody(players);
+    public void sendPuzzleLeaderChangeEmail(List<Player> players, int puzzleSize) {
+        String puzzleSizeString = getPuzzleSizeString(puzzleSize);
+        String subject = String.format("%s Digit Number Puzzle Rankings - New Leader!",puzzleSizeString);
+        String text = getPlayerRankingEmailMessageBody(players, puzzleSizeString);
         String to = primaryEmailAddress;
         String[] bcc = getPlayerRankingEmailMessageBccAddresses(players);
 
         executorService.submit(() -> sendMessage(subject,text,to,bcc));
-    }
-
-    private SimpleMailMessage getPlayerRankingEmailMessage(List<Player> players) {
-        SimpleMailMessage message = new SimpleMailMessage();
-
-        message.setTo(primaryEmailAddress);
-        message.setSubject("Number Puzzle Rankings - New Leader!");
-        message.setBcc(getPlayerRankingEmailMessageBccAddresses(players));
-        message.setText(getPlayerRankingEmailMessageBody(players));
-
-        return message;
     }
 
     private String[] getPlayerRankingEmailMessageBccAddresses(List<Player> players) {
@@ -65,9 +55,9 @@ public class EmailServiceImpl implements EmailService {
         return bccAddresses;
     }
 
-    private String getPlayerRankingEmailMessageBody(List<Player> players) {
+    private String getPlayerRankingEmailMessageBody(List<Player> players, String puzzleSizeString) {
         StringBuilder builder = new StringBuilder();
-        builder.append("There is a new leader in the Number Puzzle Game!");
+        builder.append(String.format("There is a new leader in the %s Digit Number Puzzle Game!",puzzleSizeString));
         builder.append(System.lineSeparator()).append(System.lineSeparator());
 
         builder.append("New Rankings:").append(System.lineSeparator());
@@ -82,6 +72,19 @@ public class EmailServiceImpl implements EmailService {
         return players.stream()
                 .filter(Player::isReceiveEmails)
                 .collect(Collectors.toList());
+    }
+
+    private String getPuzzleSizeString(int size) {
+        switch (size) {
+            case 3:
+                return "Three";
+
+            case 4:
+                return "Four";
+
+            default:
+                throw new IllegalArgumentException("Invalid puzzle size: " + size);
+        }
     }
 
     private void sendMessage(String subject, String text, String to) {

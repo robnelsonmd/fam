@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -14,7 +16,7 @@ public class PlayerServiceImpl implements PlayerService {
     private final EmailService emailService;
     private final PlayerRepository playerRepository;
 
-    private Player currentLeader;
+    private final Map<Integer,Player> currentLeaders = new HashMap<>();
 
     public PlayerServiceImpl(EmailService emailService, PlayerRepository playerRepository) {
         this.emailService = emailService;
@@ -24,7 +26,9 @@ public class PlayerServiceImpl implements PlayerService {
     @PostConstruct
     public void init() {
         List<Player> players = getPlayerRankings(3);
-        currentLeader = !players.isEmpty() ? players.get(0) : null;
+        currentLeaders.put(3, (!players.isEmpty() ? players.get(0) : null));
+        players = getPlayerRankings(4);
+        currentLeaders.put(4, (!players.isEmpty() ? players.get(0) : null));
     }
 
     @Override
@@ -45,7 +49,7 @@ public class PlayerServiceImpl implements PlayerService {
     public List<Player> getPlayerRankings(int puzzleSize) {
         List<Player> players = playerRepository.findAll().stream()
                 .filter(player -> (player.hasPlayedGame(puzzleSize)))
-                .sorted(Comparator.comparingInt(player -> player.getGuessCountRatio(puzzleSize)))
+                .sorted(Comparator.comparingInt(player -> (player.getGuessCountRatio(puzzleSize) * -1)))
                 .collect(Collectors.toList());
         return players;
     }
@@ -64,7 +68,7 @@ public class PlayerServiceImpl implements PlayerService {
             player = player.playerBuilder().incrementFourDigitCorrectGuessCount().build();
         }
         player = playerRepository.save(player);
-        updateCurrentLeader();
+        updateCurrentLeader(size);
         return player;
     }
 
@@ -76,7 +80,7 @@ public class PlayerServiceImpl implements PlayerService {
             player = player.playerBuilder().incrementFourDigitIncorrectGuessCount().build();
         }
         player = playerRepository.save(player);
-        updateCurrentLeader();
+        updateCurrentLeader(size);
         return player;
     }
 
@@ -98,11 +102,11 @@ public class PlayerServiceImpl implements PlayerService {
         return playerRepository.save(player);
     }
 
-    private void updateCurrentLeader() {
-        Player newLeader = getPlayerRankings(3).get(0);
-        if (!newLeader.equals(currentLeader)) {
-            currentLeader = newLeader;
-            emailService.sendPuzzleLeaderChangeEmail(getPlayerRankings(3));
+    private void updateCurrentLeader(int size) {
+        Player newLeader = getPlayerRankings(size).get(0);
+        if (!newLeader.equals(currentLeaders.get(size))) {
+            currentLeaders.put(size, newLeader);
+            emailService.sendPuzzleLeaderChangeEmail(getPlayerRankings(size), size);
         }
     }
 }
