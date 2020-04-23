@@ -8,20 +8,16 @@ import fam.puzzle.security.PuzzleGrantedAuthority;
 import fam.puzzle.security.PuzzleUser;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
+import java.util.*;
 
 public class Player extends PuzzleUser implements Serializable {
     private static final long serialVersionUID = 3790114787071542585L;
 
+    private final Map<Integer,Integer> correctGuessCounts = new HashMap<>();
+    private final Map<Integer,Integer> incorrectGuessCounts = new HashMap<>();
     private String emailAddress;
     private boolean receiveEmails;
     private int cheatCount;
-    private int correctFourDigitGuessCount;
-    private int correctThreeDigitGuessCount;
-    private int incorrectFourDigitGuessCount;
-    private int incorrectThreeDigitGuessCount;
     private int showAnswerCount;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
@@ -69,35 +65,35 @@ public class Player extends PuzzleUser implements Serializable {
     }
 
     public int getCorrectFourDigitGuessCount() {
-        return correctFourDigitGuessCount;
+        return correctGuessCounts.getOrDefault(4, 0);
     }
 
-    public void setCorrectFourDigitGuessCount(int correctFourDigitGuessCount) {
-        this.correctFourDigitGuessCount = correctFourDigitGuessCount;
+    public void setCorrectFourDigitGuessCount(int count) {
+        correctGuessCounts.put(4, count);
     }
 
     public int getCorrectThreeDigitGuessCount() {
-        return correctThreeDigitGuessCount;
+        return correctGuessCounts.getOrDefault(3, 0);
     }
 
-    public void setCorrectThreeDigitGuessCount(int correctThreeDigitGuessCount) {
-        this.correctThreeDigitGuessCount = correctThreeDigitGuessCount;
+    public void setCorrectThreeDigitGuessCount(int count) {
+        correctGuessCounts.put(3, count);
     }
 
     public int getIncorrectFourDigitGuessCount() {
-        return incorrectFourDigitGuessCount;
+        return incorrectGuessCounts.getOrDefault(4, 0);
     }
 
-    public void setIncorrectFourDigitGuessCount(int incorrectFourDigitGuessCount) {
-        this.incorrectFourDigitGuessCount = incorrectFourDigitGuessCount;
+    public void setIncorrectFourDigitGuessCount(int count) {
+        incorrectGuessCounts.put(4, count);
     }
 
     public int getIncorrectThreeDigitGuessCount() {
-        return incorrectThreeDigitGuessCount;
+        return incorrectGuessCounts.getOrDefault(3, 0);
     }
 
-    public void setIncorrectThreeDigitGuessCount(int incorrectThreeDigitGuessCount) {
-        this.incorrectThreeDigitGuessCount = incorrectThreeDigitGuessCount;
+    public void setIncorrectThreeDigitGuessCount(int count) {
+        incorrectGuessCounts.put(3, count);
     }
 
     public int getShowAnswerCount() {
@@ -116,10 +112,10 @@ public class Player extends PuzzleUser implements Serializable {
     public int getGuessCountRatio(int size) {
         switch (size) {
             case 3:
-                return (correctThreeDigitGuessCount - incorrectThreeDigitGuessCount);
+                return (getCorrectThreeDigitGuessCount() - getIncorrectThreeDigitGuessCount());
 
             case 4:
-                return (correctFourDigitGuessCount - incorrectFourDigitGuessCount);
+                return (getCorrectFourDigitGuessCount() - getIncorrectFourDigitGuessCount());
 
             default:
                 throw new IllegalArgumentException("Invalid puzzle size: " + size);
@@ -128,16 +124,8 @@ public class Player extends PuzzleUser implements Serializable {
 
     @JsonIgnore
     public boolean hasPlayedGame(int size) {
-        switch (size) {
-            case 3:
-                return ((correctThreeDigitGuessCount > 0) || (incorrectThreeDigitGuessCount > 0));
-
-            case 4:
-                return ((correctFourDigitGuessCount > 0) || (incorrectFourDigitGuessCount > 0));
-
-            default:
-                throw new IllegalArgumentException("Invalid puzzle size: " + size);
-        }
+        return (correctGuessCounts.getOrDefault(size,0) > 0) ||
+                (incorrectGuessCounts.getOrDefault(size,0) > 0);
     }
 
     @Override
