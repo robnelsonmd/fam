@@ -105,9 +105,8 @@ public class IndexController extends AbstractController {
     }
 
     private void generateNewPuzzle(HttpSession session) {
-        Player player = getPlayer(session);
-        LOG.info(String.format("Generating new puzzle for %s",player));
-        updatePuzzle(session, puzzleService.generateNewPuzzle(player, 3));
+        LOG.info(String.format("Generating new puzzle for %s",getPlayer(session)));
+        updatePuzzle(session, puzzleService.generateNewPuzzle(3));
     }
 
     private List<Integer> getAnswer(HttpSession session) {

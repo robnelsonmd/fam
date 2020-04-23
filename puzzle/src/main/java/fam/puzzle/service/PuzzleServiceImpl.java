@@ -1,6 +1,5 @@
 package fam.puzzle.service;
 
-import fam.puzzle.domain.Player;
 import fam.puzzle.domain.Puzzle;
 import fam.puzzle.generator.PuzzleGenerator;
 import org.slf4j.Logger;
@@ -9,9 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -21,9 +18,8 @@ import java.util.concurrent.TimeUnit;
 public class PuzzleServiceImpl implements PuzzleService {
     private static final Logger LOG = LoggerFactory.getLogger(PuzzleServiceImpl.class);
 
-    private final List<Puzzle> threeDigitPuzzles = new CopyOnWriteArrayList<>();
-    private final List<Puzzle> fourDigitPuzzles = new CopyOnWriteArrayList<>();
-    private final Map<Player,Puzzle> puzzleMap = new HashMap<>();
+    private final List<Puzzle> fourDigitPuzzleCache = new CopyOnWriteArrayList<>();
+    private final List<Puzzle> threeDigitPuzzleCache = new CopyOnWriteArrayList<>();
     private final PuzzleGenerator puzzleGenerator;
     private final ScheduledExecutorService threeDigitPuzzleGeneratorService = Executors.newSingleThreadScheduledExecutor();
     private final ScheduledExecutorService fourDigitPuzzleGeneratorService = Executors.newScheduledThreadPool(3);
@@ -33,10 +29,8 @@ public class PuzzleServiceImpl implements PuzzleService {
     }
 
     @Override
-    public Puzzle generateNewPuzzle(Player player, int size) {
-        Puzzle puzzle = getPuzzle(size);
-        puzzleMap.put(player, puzzle);
-        return puzzle;
+    public Puzzle generateNewPuzzle(int size) {
+        return getPuzzle(size);
     }
 
     @PostConstruct
@@ -52,19 +46,19 @@ public class PuzzleServiceImpl implements PuzzleService {
     }
 
     private void generateFourDigitPuzzles() {
-        if (fourDigitPuzzles.size() < 25) {
+        if (fourDigitPuzzleCache.size() < 25) {
             LOG.info("Generating four digit puzzles...");
             for (int i = 0; i < 50; i++) {
-                fourDigitPuzzleGeneratorService.execute(() -> fourDigitPuzzles.add(puzzleGenerator.generatePuzzle(4)));
+                fourDigitPuzzleGeneratorService.execute(() -> fourDigitPuzzleCache.add(puzzleGenerator.generatePuzzle(4)));
             }
         }
     }
 
     private void generateThreeDigitPuzzles() {
-        if (threeDigitPuzzles.size() < 25) {
+        if (threeDigitPuzzleCache.size() < 25) {
             LOG.info("Generating three digit puzzles...");
             for (int i = 0; i < 50; i++) {
-                threeDigitPuzzles.add(puzzleGenerator.generatePuzzle(3));
+                threeDigitPuzzleCache.add(puzzleGenerator.generatePuzzle(3));
             }
         }
     }
@@ -72,13 +66,13 @@ public class PuzzleServiceImpl implements PuzzleService {
     private Puzzle getPuzzle(int size) {
         switch (size) {
             case 3:
-                return !threeDigitPuzzles.isEmpty() ?
-                        threeDigitPuzzles.remove(0) :
+                return !threeDigitPuzzleCache.isEmpty() ?
+                        threeDigitPuzzleCache.remove(0) :
                         puzzleGenerator.generatePuzzle(3);
 
             case 4:
-                return !fourDigitPuzzles.isEmpty() ?
-                        fourDigitPuzzles.remove(0) :
+                return !fourDigitPuzzleCache.isEmpty() ?
+                        fourDigitPuzzleCache.remove(0) :
                         puzzleGenerator.generatePuzzle(4);
 
             default:
