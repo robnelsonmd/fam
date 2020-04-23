@@ -9,14 +9,14 @@
 
 <header th:replace="fragments/layout :: header(title='Number Puzzle Player Rankings Page')"></header>
 
-<section th:if="${(threeDigitPuzzleRankings != null) && !threeDigitPuzzleRankings.isEmpty()}" id="fourDigitRankings">
+<section id="threeDigitRankings" style="margin-bottom:50px;margin-top:50px">
     <div class="container">
         <div class="row">
             <div class="col">
                 <h2 align="center">Three Digit Puzzle Rankings</h2>
             </div>
         </div>
-        <div class="row">
+        <div th:if="${(threeDigitPuzzleRankings != null) && !threeDigitPuzzleRankings.isEmpty()}" class="row">
             <div class="col-xs-12 align-self-center m-auto text-center">
                 <table>
                     <thead>
@@ -36,21 +36,24 @@
                 </table>
             </div>
         </div>
+        <div th:if="${(threeDigitPuzzleRankings == null) || threeDigitPuzzleRankings.isEmpty()}" class="row">
+            <div class="col">
+                <h3 align="center">No players have played the three digit puzzle yet</h3>
+            </div>
+        </div>
     </div>
 </section>
 
-<div th:height="20"></div>
 <hr width="50%">
-<div th:height="20"></div>
 
-<section th:if="${(fourDigitPuzzleRankings != null) && !fourDigitPuzzleRankings.isEmpty()}" id="fourDigitRankings">
+<section id="fourDigitRankings" style="margin-top:50px">
     <div class="container">
         <div class="row">
             <div class="col">
                 <h2 align="center">Four Digit Puzzle Rankings</h2>
             </div>
         </div>
-        <div class="row">
+        <div th:if="${(fourDigitPuzzleRankings != null) && !fourDigitPuzzleRankings.isEmpty()}" class="row">
             <div class="col-xs-12 align-self-center m-auto text-center">
                 <table>
                     <thead>
@@ -68,6 +71,11 @@
                     </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+        <div th:if="${(fourDigitPuzzleRankings == null) || fourDigitPuzzleRankings.isEmpty()}" class="row">
+            <div class="col">
+                <h3 align="center">No players have played the three digit puzzle yet</h3>
             </div>
         </div>
     </div>
