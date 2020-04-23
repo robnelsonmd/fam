@@ -1,5 +1,6 @@
 package fam.puzzle.domain;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,8 +21,10 @@ public class Player extends PuzzleUser implements Serializable {
         private String emailAddress;
         private boolean receiveEmails;
         private int cheatCount;
-        private int correctGuessCount;
-        private int incorrectGuessCount;
+        private int correctFourDigitGuessCount;
+        private int correctThreeDigitGuessCount;
+        private int incorrectFourDigitGuessCount;
+        private int incorrectThreeDigitGuessCount;
         private int showAnswerCount;
 
         private Builder(Player player) {
@@ -30,8 +33,10 @@ public class Player extends PuzzleUser implements Serializable {
             this.emailAddress =  player.emailAddress;
             this.receiveEmails = player.receiveEmails;
             this.cheatCount =  player.cheatCount;
-            this.correctGuessCount =  player.correctGuessCount;
-            this.incorrectGuessCount =  player.incorrectGuessCount;
+            this.correctFourDigitGuessCount =  player.correctFourDigitGuessCount;
+            this.correctThreeDigitGuessCount =  player.correctThreeDigitGuessCount;
+            this.incorrectFourDigitGuessCount =  player.incorrectFourDigitGuessCount;
+            this.incorrectThreeDigitGuessCount =  player.incorrectThreeDigitGuessCount;
             this.showAnswerCount =  player.showAnswerCount;
         }
 
@@ -50,13 +55,23 @@ public class Player extends PuzzleUser implements Serializable {
             return this;
         }
 
-        public Builder incrementCorrectGuessCount() {
-            this.correctGuessCount++;
+        public Builder incrementFourDigitCorrectGuessCount() {
+            this.correctFourDigitGuessCount++;
             return this;
         }
 
-        public Builder incrementIncorrectGuessCount() {
-            this.incorrectGuessCount++;
+        public Builder incrementFourDigitIncorrectGuessCount() {
+            this.incorrectFourDigitGuessCount++;
+            return this;
+        }
+
+        public Builder incrementThreeDigitCorrectGuessCount() {
+            this.correctThreeDigitGuessCount++;
+            return this;
+        }
+
+        public Builder incrementThreeDigitIncorrectGuessCount() {
+            this.incorrectThreeDigitGuessCount++;
             return this;
         }
 
@@ -72,8 +87,10 @@ public class Player extends PuzzleUser implements Serializable {
                     emailAddress,
                     receiveEmails,
                     cheatCount,
-                    correctGuessCount,
-                    incorrectGuessCount,
+                    correctThreeDigitGuessCount,
+                    incorrectThreeDigitGuessCount,
+                    correctFourDigitGuessCount,
+                    incorrectFourDigitGuessCount,
                     showAnswerCount
             );
         }
@@ -82,8 +99,10 @@ public class Player extends PuzzleUser implements Serializable {
     private final String emailAddress;
     private final boolean receiveEmails;
     private final int cheatCount;
-    private final int correctGuessCount;
-    private final int incorrectGuessCount;
+    private final int correctFourDigitGuessCount;
+    private final int correctThreeDigitGuessCount;
+    private final int incorrectFourDigitGuessCount;
+    private final int incorrectThreeDigitGuessCount;
     private final int showAnswerCount;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
@@ -93,8 +112,14 @@ public class Player extends PuzzleUser implements Serializable {
             @JsonProperty("emailAddress") String emailAddress,
             @JsonProperty("receiveEmails") boolean receiveEmails,
             @JsonProperty("cheatCount") int cheatCount,
-            @JsonProperty("correctGuessCount") int correctGuessCount,
-            @JsonProperty("incorrectGuessCount") int incorrectGuessCount,
+            @JsonProperty("correctGuessCount")
+            @JsonAlias({"correctGuessCount","correctThreeDigitGuessCount"})
+                    int correctThreeDigitGuessCount,
+            @JsonProperty("incorrectGuessCount")
+            @JsonAlias({"incorrectGuessCount", "incorrectThreeDigitGuessCount"})
+                    int incorrectThreeDigitGuessCount,
+            @JsonProperty("correctFourDigitGuessCount") int correctFourDigitGuessCount,
+            @JsonProperty("incorrectFourDigitGuessCount") int incorrectFourDigitGuessCount,
             @JsonProperty("showAnswerCount") int showAnswerCount
     ) {
         super(name, authorities);
@@ -106,13 +131,15 @@ public class Player extends PuzzleUser implements Serializable {
         this.emailAddress = emailAddress;
         this.receiveEmails = receiveEmails;
         this.cheatCount = cheatCount;
-        this.correctGuessCount = correctGuessCount;
-        this.incorrectGuessCount = incorrectGuessCount;
+        this.correctThreeDigitGuessCount = correctThreeDigitGuessCount;
+        this.incorrectThreeDigitGuessCount = incorrectThreeDigitGuessCount;
+        this.correctFourDigitGuessCount = correctFourDigitGuessCount;
+        this.incorrectFourDigitGuessCount = incorrectFourDigitGuessCount;
         this.showAnswerCount = showAnswerCount;
     }
 
     public Player(String name) {
-        this(name, Collections.singletonList(new PuzzleGrantedAuthority("USER")), "", false, 0, 0, 0, 0);
+        this(name, Collections.singletonList(new PuzzleGrantedAuthority("USER")), "", false, 0, 0, 0, 0, 0, 0);
     }
 
     public Builder playerBuilder() {
@@ -135,21 +162,52 @@ public class Player extends PuzzleUser implements Serializable {
         return cheatCount;
     }
 
-    public int getCorrectGuessCount() {
-        return correctGuessCount;
+    public int getCorrectFourDigitGuessCount() {
+        return correctFourDigitGuessCount;
+    }
+
+    public int getCorrectThreeDigitGuessCount() {
+        return correctThreeDigitGuessCount;
     }
 
     @JsonIgnore
-    public int getGuessCountRatio() {
-        return correctGuessCount - incorrectGuessCount;
+    public int getGuessCountRatio(int size) {
+        switch (size) {
+            case 3:
+                return (correctThreeDigitGuessCount - incorrectThreeDigitGuessCount);
+
+            case 4:
+                return (correctFourDigitGuessCount - incorrectFourDigitGuessCount);
+
+            default:
+                throw new IllegalArgumentException("Invalid puzzle size: " + size);
+        }
     }
 
-    public int getIncorrectGuessCount() {
-        return incorrectGuessCount;
+    public int getIncorrectFourDigitGuessCount() {
+        return incorrectFourDigitGuessCount;
+    }
+
+    public int getIncorrectThreeDigitGuessCount() {
+        return incorrectThreeDigitGuessCount;
     }
 
     public int getShowAnswerCount() {
         return showAnswerCount;
+    }
+
+    @JsonIgnore
+    public boolean hasPlayedGame(int size) {
+        switch (size) {
+            case 3:
+                return ((correctThreeDigitGuessCount > 0) || (incorrectThreeDigitGuessCount > 0));
+
+            case 4:
+                return ((correctFourDigitGuessCount > 0) || (incorrectFourDigitGuessCount > 0));
+
+            default:
+                throw new IllegalArgumentException("Invalid puzzle size: " + size);
+        }
     }
 
     @Override

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
@@ -22,7 +23,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     @PostConstruct
     public void init() {
-        List<Player> players = getPlayers();
+        List<Player> players = getPlayerRankings(3);
         currentLeader = !players.isEmpty() ? players.get(0) : null;
     }
 
@@ -41,9 +42,11 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public List<Player> getPlayers() {
-        List<Player> players = playerRepository.findAll();
-        players.sort(Comparator.comparingInt(Player::getGuessCountRatio).reversed());
+    public List<Player> getPlayerRankings(int puzzleSize) {
+        List<Player> players = playerRepository.findAll().stream()
+                .filter(player -> (player.hasPlayedGame(puzzleSize)))
+                .sorted(Comparator.comparingInt(player -> player.getGuessCountRatio(puzzleSize)))
+                .collect(Collectors.toList());
         return players;
     }
 
@@ -54,16 +57,24 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player incrementCorrectGuessCount(Player player) {
-        player = player.playerBuilder().incrementCorrectGuessCount().build();
+    public Player incrementCorrectGuessCount(Player player, int size) {
+        if (size == 3) {
+            player = player.playerBuilder().incrementThreeDigitCorrectGuessCount().build();
+        } else if (size == 4) {
+            player = player.playerBuilder().incrementFourDigitCorrectGuessCount().build();
+        }
         player = playerRepository.save(player);
         updateCurrentLeader();
         return player;
     }
 
     @Override
-    public Player incrementIncorrectGuessCount(Player player) {
-        player = player.playerBuilder().incrementIncorrectGuessCount().build();
+    public Player incrementIncorrectGuessCount(Player player, int size) {
+        if (size == 3) {
+            player = player.playerBuilder().incrementThreeDigitIncorrectGuessCount().build();
+        } else if (size == 4) {
+            player = player.playerBuilder().incrementFourDigitIncorrectGuessCount().build();
+        }
         player = playerRepository.save(player);
         updateCurrentLeader();
         return player;
@@ -88,10 +99,10 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     private void updateCurrentLeader() {
-        Player newLeader = getPlayers().get(0);
+        Player newLeader = getPlayerRankings(3).get(0);
         if (!newLeader.equals(currentLeader)) {
             currentLeader = newLeader;
-            emailService.sendPuzzleLeaderChangeEmail(getPlayers());
+            emailService.sendPuzzleLeaderChangeEmail(getPlayerRankings(3));
         }
     }
 }

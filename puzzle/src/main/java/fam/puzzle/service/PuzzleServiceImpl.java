@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class PuzzleServiceImpl implements PuzzleService {
     private static final Logger LOG = LoggerFactory.getLogger(PuzzleServiceImpl.class);
+    private static final int MIN_CACHE_SIZE = 25;
 
     private final List<Puzzle> fourDigitPuzzleCache = new CopyOnWriteArrayList<>();
     private final List<Puzzle> threeDigitPuzzleCache = new CopyOnWriteArrayList<>();
@@ -40,10 +41,9 @@ public class PuzzleServiceImpl implements PuzzleService {
     @PostConstruct
     public void initializePuzzleGenerators() {
         boolean devProfileActive = Arrays.asList(environment.getActiveProfiles()).contains("dev");
-        if (!devProfileActive) {
-            threeDigitPuzzleGeneratorService.scheduleWithFixedDelay(this::generateThreeDigitPuzzles, 0, 1, TimeUnit.SECONDS);
-            fourDigitPuzzleGeneratorService.scheduleWithFixedDelay(this::generateFourDigitPuzzles, 0, 1, TimeUnit.SECONDS);
-        }
+        final int minCacheSize = !devProfileActive ? MIN_CACHE_SIZE : 5;
+        threeDigitPuzzleGeneratorService.scheduleWithFixedDelay(() -> generateThreeDigitPuzzles(minCacheSize), 0, 1, TimeUnit.SECONDS);
+        fourDigitPuzzleGeneratorService.scheduleWithFixedDelay(() -> generateFourDigitPuzzles(minCacheSize), 0, 1, TimeUnit.SECONDS);
     }
 
     @PreDestroy
@@ -52,19 +52,19 @@ public class PuzzleServiceImpl implements PuzzleService {
         fourDigitPuzzleGeneratorService.shutdownNow();
     }
 
-    private void generateFourDigitPuzzles() {
-        if (fourDigitPuzzleCache.size() < 25) {
+    private void generateFourDigitPuzzles(int minSize) {
+        if (fourDigitPuzzleCache.size() < minSize) {
             LOG.info("Generating four digit puzzles...");
-            for (int i = 0; i < 50; i++) {
+            for (int i = 0; i < (minSize * 2); i++) {
                 fourDigitPuzzleGeneratorService.execute(() -> fourDigitPuzzleCache.add(puzzleGenerator.generatePuzzle(4)));
             }
         }
     }
 
-    private void generateThreeDigitPuzzles() {
-        if (threeDigitPuzzleCache.size() < 25) {
+    private void generateThreeDigitPuzzles(int minSize) {
+        if (threeDigitPuzzleCache.size() < minSize) {
             LOG.info("Generating three digit puzzles...");
-            for (int i = 0; i < 50; i++) {
+            for (int i = 0; i < (minSize * 2); i++) {
                 threeDigitPuzzleCache.add(puzzleGenerator.generatePuzzle(3));
             }
         }

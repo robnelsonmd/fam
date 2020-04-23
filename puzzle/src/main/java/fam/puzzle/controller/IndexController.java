@@ -141,13 +141,15 @@ public class IndexController extends AbstractController {
 
     private void incrementCorrectGuessCount(HttpSession session) {
         Player player = getPlayer(session);
-        player = playerService.incrementCorrectGuessCount(player);
+        Puzzle puzzle = getPuzzle(session);
+        player = playerService.incrementCorrectGuessCount(player, puzzle.getSize());
         updatePlayer(session, player);
     }
 
     private void incrementIncorrectGuessCount(HttpSession session) {
         Player player = getPlayer(session);
-        player = playerService.incrementIncorrectGuessCount(player);
+        Puzzle puzzle = getPuzzle(session);
+        player = playerService.incrementIncorrectGuessCount(player, puzzle.getSize());
         updatePlayer(session, player);
     }
 

@@ -16,13 +16,12 @@
 
 <header th:fragment="header(title)" id="header">
     <h1 align="center" th:text="${title}">Title</h1>
-    <h4 th:if="${applicationVersion}" align="center" th:text="'Version ' + ${applicationVersion}">Title</h4>
     <hr class="hr-primary">
 </header>
 
 <nav th:fragment="navbar(page)" class="navbar navbar-expand-sm navbar-dark bg-dark">
     <div class="container">
-        <a href="home" class="navbar-brand">Number Puzzle</a>
+        <a href="home" class="navbar-brand" th:text="'Number Puzzle v' + ${applicationVersion}">Branding</a>
         <button
                 class="navbar-toggler"
                 data-toggle="collapse"
@@ -35,8 +34,8 @@
                 <li class="nav-item" th:classappend="${#strings.equals(page,'index')} ? active : ''">
                     <a href="home" class="nav-link">Home</a>
                 </li>
-                <li class="nav-item" th:classappend="${#strings.equals(page,'players')} ? active : ''">
-                    <a href="players" class="nav-link">Players</a>
+                <li class="nav-item" th:classappend="${#strings.equals(page,'rankings')} ? active : ''">
+                    <a href="rankings" class="nav-link">Rankings</a>
                 </li>
                 <li class="nav-item" th:classappend="${#strings.equals(page,'settings')} ? active : ''">
                     <a href="settings" class="nav-link">Settings</a>
