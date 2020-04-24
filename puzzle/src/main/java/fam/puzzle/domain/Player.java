@@ -15,8 +15,11 @@ public class Player extends PuzzleUser implements Serializable {
 
     private final Map<Integer,Integer> correctGuessCounts = new HashMap<>();
     private final Map<Integer,Integer> incorrectGuessCounts = new HashMap<>();
+    private CellCarrier cellCarrier = CellCarrier.NONE;
+    private String cellNumber;
     private String emailAddress;
     private boolean receiveEmails;
+    private boolean receiveTexts;
     private int cheatCount;
     private int showAnswerCount;
 
@@ -40,6 +43,22 @@ public class Player extends PuzzleUser implements Serializable {
         this("FORM-PLAYER");
     }
 
+    public CellCarrier getCellCarrier() {
+        return cellCarrier;
+    }
+
+    public void setCellCarrier(CellCarrier cellCarrier) {
+        this.cellCarrier = cellCarrier;
+    }
+
+    public String getCellNumber() {
+        return cellNumber;
+    }
+
+    public void setCellNumber(String cellNumber) {
+        this.cellNumber = cellNumber;
+    }
+
     public String getEmailAddress() {
         return emailAddress;
     }
@@ -54,6 +73,14 @@ public class Player extends PuzzleUser implements Serializable {
 
     public void setReceiveEmails(boolean receiveEmails) {
         this.receiveEmails = receiveEmails;
+    }
+
+    public boolean isReceiveTexts() {
+        return receiveTexts;
+    }
+
+    public void setReceiveTexts(boolean receiveTexts) {
+        this.receiveTexts = receiveTexts;
     }
 
     public int getCheatCount() {

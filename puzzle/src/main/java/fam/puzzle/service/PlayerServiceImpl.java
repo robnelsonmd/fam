@@ -91,14 +91,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player updateEmailAddress(Player player, String emailAddress) {
-        player.setEmailAddress(emailAddress);
-        return playerRepository.save(player);
-    }
-
-    @Override
-    public Player updateReceiveEmails(Player player, boolean receiveEmails) {
-        player.setReceiveEmails(receiveEmails);
+    public Player savePlayer(Player player) {
         return playerRepository.save(player);
     }
 
