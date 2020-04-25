@@ -42,14 +42,7 @@ public class Puzzle {
     }
 
     public String getSizeString() {
-        switch(size) {
-            case 3:
-                return "Three";
-            case 4:
-                return "Four";
-            default:
-                throw new IllegalStateException("Invalid size: " + size);
-        }
+        return PuzzleUtil.getPuzzleSizeString(size);
     }
 
     public boolean isCorrectGuess(int guess) {

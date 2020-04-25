@@ -6,6 +6,7 @@ import fam.messaging.text.CellCarrier;
 import fam.messaging.text.TextService;
 import fam.puzzle.domain.Player;
 import fam.puzzle.repository.PlayerRepository;
+import fam.puzzle.util.PuzzleUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -151,19 +152,6 @@ public class PlayerServiceImpl implements PlayerService {
         return builder.toString();
     }
 
-    private String getPuzzleSizeString(int size) {
-        switch (size) {
-            case 3:
-                return "Three";
-
-            case 4:
-                return "Four";
-
-            default:
-                throw new IllegalArgumentException("Invalid puzzle size: " + size);
-        }
-    }
-
     private String[] getPlayerTextAddresses() {
         return getPlayers().stream()
                 .filter(Player::isReceiveTexts)
@@ -177,7 +165,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     private void sendPuzzleLeaderChangeEmail(List<Player> players, int puzzleSize) {
-        String puzzleSizeString = getPuzzleSizeString(puzzleSize);
+        String puzzleSizeString = PuzzleUtil.getPuzzleSizeString(puzzleSize);
         String subject = getPlayerRankingEmailSubject(puzzleSizeString);
         String text = getPlayerRankingEmailMessageBody(players, puzzleSizeString);
         String[] bcc = getPlayerEmailAddresses();
@@ -190,7 +178,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     private void sendPuzzleLeaderChangeText(List<Player> players, int puzzleSize) {
-        String puzzleSizeString = getPuzzleSizeString(puzzleSize);
+        String puzzleSizeString = PuzzleUtil.getPuzzleSizeString(puzzleSize);
         String text = getPlayerRankingTextMessageBody(players, puzzleSizeString);
         String[] bcc = getPlayerTextAddresses();
         textService.sendText(null, text, primaryTextAddress, bcc);

@@ -29,4 +29,19 @@ public final class PuzzleUtil {
         String numberFormatString = String.format("%%0%dd",numberOfDigits);
         return String.format(numberFormatString, value);
     }
+
+    public static String getPuzzleSizeString(int size) {
+        switch(size) {
+            case 3:
+                return "Three";
+            case 4:
+                return "Four";
+            case 5:
+                return "Five";
+            case 6:
+                return "Six";
+            default:
+                throw new IllegalStateException("Invalid size: " + size);
+        }
+    }
 }
