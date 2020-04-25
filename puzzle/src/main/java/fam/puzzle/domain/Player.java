@@ -142,7 +142,7 @@ public class Player extends PuzzleUser implements Serializable {
     }
 
     public void setIncorrectGuessCount(int puzzleSize, int guessCount) {
-        correctGuessCounts.put(puzzleSize, guessCount);
+        incorrectGuessCounts.put(puzzleSize, guessCount);
     }
 
     public int getIncorrectThreeDigitGuessCount() {
