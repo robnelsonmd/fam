@@ -54,3 +54,7 @@ table, th, td {
     margin-bottom: 1.5rem;
     text-align: center;
 }
+
+#cellCarrier {
+    width: 8em;
+}

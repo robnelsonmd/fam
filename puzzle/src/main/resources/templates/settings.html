@@ -13,34 +13,21 @@
     <div class="container">
         <form th:action="@{/settings}" th:object="${player}" method="post">
             <div class="row">
-                <label>Name:
-                    <span th:text="*{name}"></span>
-                </label>
+                <b class="mx-1 my-auto">Name:</b>
+                <span th:text="*{name}"></span>
             </div>
             <div class="row">
-                <label>Receive Emails:
-                    <input type="checkbox" name="receiveEmails" th:checked="*{receiveEmails}"/>
-                </label>
+                <b class="mx-1 my-auto">Receive Emails:</b>
+                <input class="mr-1 my-auto" type="checkbox" name="receiveEmails" th:checked="*{receiveEmails}"/>
+                <input class="mx-1" type="email" size="30" name="emailAddress" th:value="*{emailAddress}" placeholder="Email Address"/>
             </div>
             <div class="row">
-                <label>Email Address:
-                    <input type="email" name="emailAddress" size="50" th:value="*{emailAddress}"/>
-                </label>
-            </div>
-            <div class="row">
-                <label>Receive Texts:
-                    <input type="checkbox" name="receiveTexts" th:checked="*{receiveTexts}"/>
-                </label>
-            </div>
-            <div class="form-group blu-margin">
-                <select class="form-control" name="cellCarrier"  th:field="*{cellCarrier}">
+                <b class="mx-1 my-auto">Receive Texts:</b>
+                <input class="mx-1 my-auto" type="checkbox" name="receiveTexts" th:checked="*{receiveTexts}"/>
+                <select id="cellCarrier" class="form-control blu-margin mx-1" width="10" name="cellCarrier"  th:field="*{cellCarrier}">
                     <option th:each="cellCarrier : ${cellCarriers}" th:value="${cellCarrier}" th:text="${cellCarrier}"></option>
                 </select>
-            </div>
-            <div class="row">
-                <label>Cell Number:
-                    <input type="text" name="cellNumber" size="50" th:value="*{cellNumber}"/>
-                </label>
+                <input class="mx-1" type="text" name="cellNumber" th:value="*{cellNumber}" placeholder="Cell Number"/>
             </div>
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
             <button class="btn btn-primary" name="submit" value="submit">Update Player Settings</button>
