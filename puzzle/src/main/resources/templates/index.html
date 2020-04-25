@@ -3,7 +3,7 @@
 <head th:replace="fragments/layout :: head(title='Number Puzzle')">
     <title>Title</title>
 </head>
-<body>
+<body onload="document.form.guess.focus();">
 
 <div th:replace="fragments/layout :: navbar(page='index')">Navbar</div>
 
@@ -91,9 +91,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-12 align-self-center m-auto">
-                    <form th:if="${answer == null}" method="POST" action="/guess" class="form-inline justify-content-start">
-                        <label for="guess" class="mr-2">Enter Guess</label>
-                        <input type="text" id="guess" name="guess" class="form-control mb-2 mr-2" placeholder="???">
+                    <form name="form" th:if="${answer == null}" method="POST" action="/guess" class="form-inline justify-content-start">
+                        <input type="text" id="guess" name="guess" class="form-control mb-2 mr-2" placeholder="Enter Guess">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                         <button class="btn btn-primary mb-2 mr-2 d-none d-sm-block" name="submit" value="submit">Submit Guess</button>
                     </form>
