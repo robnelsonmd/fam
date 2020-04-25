@@ -34,7 +34,7 @@ public class PuzzleServiceImpl implements PuzzleService {
     }
 
     @Override
-    public Puzzle generateNewPuzzle(int size) {
+    public Puzzle getNewPuzzle(int size) {
         return getPuzzle(size);
     }
 

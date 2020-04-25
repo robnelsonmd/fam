@@ -49,7 +49,7 @@ public class IndexController extends AbstractController {
         }
 
         if (newPuzzle.isPresent()) {
-            generateNewPuzzle(session);
+            getNewPuzzle(session, getCurrentPuzzleSize(session));
         }
 
         return "index";
@@ -68,8 +68,7 @@ public class IndexController extends AbstractController {
             HttpSession session,
             @RequestParam("size") int size
     ) {
-        LOG.info(String.format("Generating new puzzle for %s",getPlayer(session)));
-        updatePuzzle(session, puzzleService.generateNewPuzzle(size));
+        getNewPuzzle(session, size);
 
         return "redirect:index";
     }
@@ -119,15 +118,19 @@ public class IndexController extends AbstractController {
         return "redirect:index";
     }
 
-    private void generateNewPuzzle(HttpSession session) {
-        LOG.info(String.format("Generating new puzzle for %s",getPlayer(session)));
-        Puzzle puzzle = getPuzzle(session);
-        int puzzleSize = (puzzle != null) ? puzzle.getSize() : 3;
-        updatePuzzle(session, puzzleService.generateNewPuzzle(puzzleSize));
+    private void getNewPuzzle(HttpSession session, int size) {
+        String puzzleSizeString = PuzzleUtil.getPuzzleSizeString(size).toLowerCase();
+        LOG.info(String.format("Getting new %s digit puzzle for %s",puzzleSizeString,getPlayer(session)));
+        updatePuzzle(session, puzzleService.getNewPuzzle(size));
     }
 
     private List<Integer> getAnswer(HttpSession session) {
         return getPuzzle(session).getAnswer();
+    }
+
+    private int getCurrentPuzzleSize(HttpSession session) {
+        Puzzle puzzle = getPuzzle(session);
+        return (puzzle != null) ? puzzle.getSize() : 3;
     }
 
     private Puzzle getPuzzle(HttpSession session) {

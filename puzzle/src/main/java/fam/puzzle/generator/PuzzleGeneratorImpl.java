@@ -32,7 +32,7 @@ public class PuzzleGeneratorImpl implements PuzzleGenerator {
         } while ((possibleMatches.size() > 1) && (++count < 1000));
 
         if (count >= 1000) {
-            System.out.println("Failed to generate puzzle");
+            LOG.error("Failed to generate puzzle after 1000 attempts");
             System.exit(1);
         }
 
