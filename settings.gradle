@@ -1,4 +1,5 @@
 rootProject.name = 'fam'
 include 'puzzle'
 include 'core'
+include 'messaging'
 

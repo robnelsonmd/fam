@@ -4,7 +4,6 @@ plugins {
     id 'java'
 }
 
-version = '5.0'
 sourceCompatibility = '8'
 
 configurations {
@@ -19,27 +18,12 @@ configurations {
 
 dependencies {
     implementation project(':core')
-    implementation project(':messaging')
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.security:spring-security-test'
-    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
 }
 
-processResources {
-    filesMatching('application.properties') {
-        expand(project.properties)
-    }
-}
-
-test {
-    useJUnitPlatform()
-}
+bootJar.enabled = false
+jar.enabled = true

@@ -2,22 +2,26 @@ package fam.puzzle.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fam.core.util.StringUtil;
+import fam.messaging.text.CellCarrier;
 import fam.puzzle.security.PuzzleGrantedAuthority;
 import fam.puzzle.security.PuzzleUser;
 
 import java.io.Serializable;
 import java.util.*;
 
+@JsonInclude(JsonInclude.Include. NON_NULL)
 public class Player extends PuzzleUser implements Serializable {
     private static final long serialVersionUID = 3790114787071542585L;
 
     private final Map<Integer,Integer> correctGuessCounts = new HashMap<>();
     private final Map<Integer,Integer> incorrectGuessCounts = new HashMap<>();
-    private CellCarrier cellCarrier = CellCarrier.NONE;
+    private CellCarrier cellCarrier = CellCarrier.ATT;
     private String cellNumber;
     private String emailAddress;
+    private String textAddress;
     private boolean receiveEmails;
     private boolean receiveTexts;
     private int cheatCount;
@@ -67,6 +71,14 @@ public class Player extends PuzzleUser implements Serializable {
         this.emailAddress = emailAddress;
     }
 
+    public String getTextAddress() {
+        return textAddress;
+    }
+
+    public void setTextAddress(String textAddress) {
+        this.textAddress = textAddress;
+    }
+
     public boolean isReceiveEmails() {
         return receiveEmails;
     }
@@ -99,6 +111,15 @@ public class Player extends PuzzleUser implements Serializable {
         correctGuessCounts.put(4, count);
     }
 
+    @JsonIgnore
+    public int getCorrectGuessCount(int puzzleSize) {
+        return correctGuessCounts.getOrDefault(puzzleSize, 0);
+    }
+
+    public void setCorrectGuessCount(int puzzleSize, int guessCount) {
+        correctGuessCounts.put(puzzleSize, guessCount);
+    }
+
     public int getCorrectThreeDigitGuessCount() {
         return correctGuessCounts.getOrDefault(3, 0);
     }
@@ -113,6 +134,15 @@ public class Player extends PuzzleUser implements Serializable {
 
     public void setIncorrectFourDigitGuessCount(int count) {
         incorrectGuessCounts.put(4, count);
+    }
+
+    @JsonIgnore
+    public int getIncorrectGuessCount(int puzzleSize) {
+        return incorrectGuessCounts.getOrDefault(puzzleSize, 0);
+    }
+
+    public void setIncorrectGuessCount(int puzzleSize, int guessCount) {
+        correctGuessCounts.put(puzzleSize, guessCount);
     }
 
     public int getIncorrectThreeDigitGuessCount() {
@@ -137,16 +167,7 @@ public class Player extends PuzzleUser implements Serializable {
 
     @JsonIgnore
     public int getGuessCountRatio(int size) {
-        switch (size) {
-            case 3:
-                return (getCorrectThreeDigitGuessCount() - getIncorrectThreeDigitGuessCount());
-
-            case 4:
-                return (getCorrectFourDigitGuessCount() - getIncorrectFourDigitGuessCount());
-
-            default:
-                throw new IllegalArgumentException("Invalid puzzle size: " + size);
-        }
+        return getCorrectGuessCount(size) - getIncorrectGuessCount(size);
     }
 
     @JsonIgnore

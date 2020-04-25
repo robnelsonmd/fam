@@ -121,7 +121,8 @@ public class IndexController extends AbstractController {
 
     private void generateNewPuzzle(HttpSession session) {
         LOG.info(String.format("Generating new puzzle for %s",getPlayer(session)));
-        int puzzleSize = getPuzzle(session).getSize();
+        Puzzle puzzle = getPuzzle(session);
+        int puzzleSize = (puzzle != null) ? puzzle.getSize() : 3;
         updatePuzzle(session, puzzleService.generateNewPuzzle(puzzleSize));
     }
 

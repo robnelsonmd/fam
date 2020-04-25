@@ -1,6 +1,6 @@
 package fam.puzzle.controller;
 
-import fam.puzzle.domain.CellCarrier;
+import fam.messaging.text.CellCarrier;
 import fam.puzzle.domain.Player;
 import fam.puzzle.service.PlayerService;
 import org.slf4j.Logger;
@@ -60,16 +60,10 @@ public class SettingsController extends AbstractController {
             player = playerService.savePlayer(player);
         }
 
-        if (player.getCellCarrier() != updatedPlayer.getCellCarrier()) {
-            LOG.info(String.format("%s updated their cell carrier to %s",player,updatedPlayer.getCellCarrier()));
-            player.setCellCarrier(updatedPlayer.getCellCarrier());
-            player = playerService.savePlayer(player);
-        }
-
-        if (!Objects.equals(player.getCellNumber(), updatedPlayer.getCellNumber())) {
-            LOG.info(String.format("%s updated their cell number to %s",player,updatedPlayer.getCellNumber()));
-            player.setCellNumber(updatedPlayer.getCellNumber());
-            player = playerService.savePlayer(player);
+        if ((player.getCellCarrier() != updatedPlayer.getCellCarrier()) ||
+                !Objects.equals(player.getCellNumber(), updatedPlayer.getCellNumber())) {
+            LOG.info(String.format("%s updated their cell info to %s:%s",player,updatedPlayer.getCellCarrier(),updatedPlayer.getCellNumber()));
+            playerService.updateCellInfo(player, updatedPlayer.getCellCarrier(), updatedPlayer.getCellNumber());
         }
 
         updatePlayer(session, player);
