@@ -12,16 +12,16 @@
 <section id="settings">
     <div class="container">
         <form th:action="@{/settings}" th:object="${player}" method="post">
-            <div class="row">
+            <div class="row m-1">
                 <b class="mx-1 my-auto">Name:</b>
                 <span th:text="*{name}"></span>
             </div>
-            <div class="row">
+            <div class="row m-1">
                 <b class="mx-1 my-auto">Receive Emails:</b>
-                <input class="mr-1 my-auto" type="checkbox" name="receiveEmails" th:checked="*{receiveEmails}"/>
+                <input class="mx-1 my-auto" type="checkbox" name="receiveEmails" th:checked="*{receiveEmails}"/>
                 <input class="mx-1" type="email" size="30" name="emailAddress" th:value="*{emailAddress}" placeholder="Email Address"/>
             </div>
-            <div class="row">
+            <div class="row m-1">
                 <b class="mx-1 my-auto">Receive Texts:</b>
                 <input class="mx-1 my-auto" type="checkbox" name="receiveTexts" th:checked="*{receiveTexts}"/>
                 <select id="cellCarrier" class="form-control blu-margin mx-1" width="10" name="cellCarrier"  th:field="*{cellCarrier}">
