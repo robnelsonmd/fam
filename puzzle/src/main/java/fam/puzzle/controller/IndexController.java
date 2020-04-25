@@ -107,7 +107,7 @@ public class IndexController extends AbstractController {
         return "index";
     }
 
-    @GetMapping("/logout")
+    @GetMapping({"/logout","/admin/logout"})
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 

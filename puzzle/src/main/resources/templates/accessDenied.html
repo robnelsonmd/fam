@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="fragments/layout :: head(title='Number Puzzle Access Denied')">
+    <title>Title</title>
+</head>
+<body>
+
+<div th:replace="fragments/layout :: navbar(page='accessDenied')">Navbar</div>
+
+<header th:replace="fragments/layout :: header(title='Number Puzzle Access Denied Page')"></header>
+
+<section id="access-denied">
+    <div class="container justify-content-center">
+        <div class="row">
+            <div class="col text-center">
+                <b align="center">You are not authorized to view the page you requested.</b>
+            </div>
+        </div>
+        <div sec:authorize="hasAuthority('ADMIN')" class="row">
+            <div class="col text-center">
+                <span>Click <a href="/admin">here</a> to return to the Admin page.</span>
+            </div>
+        </div>
+        <div sec:authorize="hasAuthority('USER')" class="row">
+            <div class="col text-center">
+                <span>Click <a href="/home">here</a> to return to the Home page.</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div th:replace="fragments/layout :: script">Script</div>
+
+</body>
+</html>

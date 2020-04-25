@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head(title='Number Puzzle Admin')">
+    <title>Title</title>
+</head>
+<body>
+
+<div th:replace="fragments/layout :: navbar(page='admin')">Navbar</div>
+
+<header th:replace="fragments/layout :: header(title='Number Puzzle Admin Page')"></header>
+
+<section id="admin-links">
+    <div class="container justify-content-center">
+        <div class="row">
+            <div class="col text-center">
+                <b align="center">Admin Links</b>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <span>1) <a href="actuator/logfile">Application Log File</a></span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div th:replace="fragments/layout :: script">Script</div>
+
+</body>
+</html>

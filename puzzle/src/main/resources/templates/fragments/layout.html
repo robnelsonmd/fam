@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
 >
 <head th:fragment="head(title)">
     <meta charset="UTF-8" />
@@ -21,7 +22,8 @@
 
 <nav th:fragment="navbar(page)" class="navbar navbar-expand-sm navbar-dark bg-dark">
     <div class="container">
-        <a href="home" class="navbar-brand" th:text="'Number Puzzle v' + ${applicationVersion}">Branding</a>
+        <a sec:authorize="hasAuthority('ADMIN')" href="/admin" class="navbar-brand" th:text="'Number Puzzle v' + ${applicationVersion}">Branding</a>
+        <a sec:authorize="hasAuthority('USER')" href="/home" class="navbar-brand" th:text="'Number Puzzle v' + ${applicationVersion}">Branding</a>
         <button
                 class="navbar-toggler"
                 data-toggle="collapse"
@@ -31,14 +33,17 @@
         </button>
         <div id="navbarCollapse" class="collapse navbar-collapse">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item" th:classappend="${#strings.equals(page,'index')} ? active : ''">
+                <li class="nav-item" sec:authorize="hasAuthority('USER')" th:classappend="${#strings.equals(page,'index')} ? active : ''">
                     <a href="home" class="nav-link">Home</a>
                 </li>
-                <li class="nav-item" th:classappend="${#strings.equals(page,'rankings')} ? active : ''">
+                <li class="nav-item" sec:authorize="hasAuthority('USER')" th:classappend="${#strings.equals(page,'rankings')} ? active : ''">
                     <a href="rankings" class="nav-link">Rankings</a>
                 </li>
-                <li class="nav-item" th:classappend="${#strings.equals(page,'settings')} ? active : ''">
+                <li class="nav-item" sec:authorize="hasAuthority('USER')" th:classappend="${#strings.equals(page,'settings')} ? active : ''">
                     <a href="settings" class="nav-link">Settings</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAuthority('ADMIN')" th:classappend="${#strings.equals(page,'admin')} ? active : ''">
+                    <a href="admin" class="nav-link">Admin</a>
                 </li>
                 <li class="nav-item">
                     <a href="logout" class="nav-link">Logout (<span th:text="${session.player}"></span>)</a>
