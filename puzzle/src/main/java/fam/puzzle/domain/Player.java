@@ -140,10 +140,11 @@ public class Player extends PuzzleUser implements Serializable {
 
     @JsonIgnore
     public String getDetails() {
-        return String.format("Player {name = %s, receiveEmails = %s, " +
-                "emailAddress = %s, receiveTexts = %s, cellCarrier = %s, " +
-                "cell number = %s}", getName(), isReceiveEmails(), getEmailAddress(),
-                isReceiveTexts(), getCellCarrier(), getCellNumber());
+        return String.format("Player {%s, emails: %s/%s, texts: %s/%s/%s/%s, guesses: 3:%s/%s 4:%s/%s}",
+                getName(), isReceiveEmails(), getEmailAddress(),
+                isReceiveTexts(), getCellCarrier(), getCellNumber(), getTextAddress(),
+                getCorrectGuessCount(3), getIncorrectGuessCount(3),
+                getCorrectGuessCount(4), getIncorrectGuessCount(4));
     }
 
     public int getIncorrectFourDigitGuessCount() {
