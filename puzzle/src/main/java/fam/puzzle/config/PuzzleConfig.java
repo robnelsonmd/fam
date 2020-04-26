@@ -1,5 +1,7 @@
 package fam.puzzle.config;
 
+import fam.core.executor.TaskScheduler;
+import fam.core.executor.TaskSchedulerImpl;
 import fam.puzzle.generator.PuzzleGenerator;
 import fam.puzzle.generator.PuzzleGeneratorImpl;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,5 +45,10 @@ public class PuzzleConfig {
     @Profile("prod")
     public PuzzleGenerator threeDigitPuzzeGeneratorProd() {
         return new PuzzleGeneratorImpl(3, 50);
+    }
+
+    @Bean
+    public TaskScheduler taskScheduler() {
+        return new TaskSchedulerImpl(5);
     }
 }
