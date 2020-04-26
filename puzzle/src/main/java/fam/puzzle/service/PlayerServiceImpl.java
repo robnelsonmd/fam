@@ -49,6 +49,25 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
+    public Player createPlayer(String name, boolean receiveEmails,
+                               String emailAddress, boolean receiveTexts,
+                               CellCarrier cellCarrier, String cellNumber) {
+        LOG.info(String.format("Creating player %s",name));
+
+        Player player = new Player(name);
+        player.setReceiveEmails(receiveEmails);
+        player.setEmailAddress(emailAddress);
+        player.setReceiveTexts(receiveTexts);
+        player.setCellCarrier(cellCarrier);
+        player.setCellNumber(cellNumber);
+        player.setTextAddress(textService.getTextAddress(cellCarrier,cellNumber));
+
+        sendWelcomeMessage(player);
+
+        return playerRepository.save(player);
+    }
+
+    @Override
     public Player getPlayer(String name) {
         Player player = playerRepository.findPlayer(name);
 
@@ -197,6 +216,32 @@ public class PlayerServiceImpl implements PlayerService {
                 .toArray(String[]::new);
     }
 
+    private String getWelcomeEmailMessageBody(Player player) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(String.format("Hi %s!",player.getName()));
+        builder.append(System.lineSeparator()).append(System.lineSeparator());
+        builder.append("Welcome to the Number Puzzle Game! You can access the game at this URL: http://34.71.172.138/");
+        builder.append(System.lineSeparator()).append(System.lineSeparator());
+        builder.append("There are both three and four-digit puzzle games, and player rankings are tracked for each type.");
+        builder.append(System.lineSeparator()).append(System.lineSeparator());
+        builder.append("You may optionally receive emails and/or texts whenever the rankings change for each puzzle type.");
+        builder.append(System.lineSeparator()).append(System.lineSeparator());
+        builder.append("Puzzle rankings will be reset each week.");
+        builder.append(System.lineSeparator()).append(System.lineSeparator());
+        builder.append(String.format("To log in, simply enter your name (%s).  Good luck and have fun!",player.getName()));
+
+        return builder.toString();
+    }
+
+    private String getWelcomeTextMessageBody(Player player) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(String.format("Hi %s! ",player.getName()));
+        builder.append("Welcome to the Number Puzzle Game! You can access the game at this URL: http://34.71.172.138/");
+        builder.append(String.format(" To log in, simply enter your name (%s).  Good luck and have fun!",player.getName()));
+
+        return builder.toString();
+    }
+
     private static boolean isValidEmailAdress(String emailAddress) {
         return !StringUtil.isEmptyString(emailAddress);
     }
@@ -219,6 +264,30 @@ public class PlayerServiceImpl implements PlayerService {
         String text = getPlayerRankingTextMessageBody(players, puzzleSizeString);
         String[] bcc = getPlayerTextAddresses();
         textService.sendText(null, text, primaryTextAddress, bcc);
+    }
+
+    private void sendWelcomeEmail(Player player) {
+        if (!player.isReceiveEmails() || !isValidEmailAdress(player.getEmailAddress())) {
+            return;
+        }
+
+        String subject = "Welcome to the Number Puzzle App!";
+        String text = getWelcomeEmailMessageBody(player);
+        emailService.sendEmail(subject, text, player.getEmailAddress());
+    }
+
+    private void sendWelcomeMessage(Player player) {
+        sendWelcomeEmail(player);
+        sendWelcomeText(player);
+    }
+
+    private void sendWelcomeText(Player player) {
+        if (!player.isReceiveTexts() || !isValidEmailAdress(player.getTextAddress())) {
+            return;
+        }
+
+        String text = getWelcomeTextMessageBody(player);
+        emailService.sendEmail(null, text, player.getTextAddress());
     }
 
     private void updateCurrentLeader(int size) {

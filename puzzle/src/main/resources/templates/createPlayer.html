@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head(title='Number Puzzle Create Player')">
+    <title>Title</title>
+</head>
+<body>
+
+<div th:replace="fragments/layout :: navbar(page='admin')">Navbar</div>
+
+<header th:replace="fragments/layout :: header(title='Number Puzzle Create Player Page')"></header>
+
+<section id="user-list">
+    <div class="container justify-content-center">
+        <form action="/admin/createPlayer" method="post">
+            <div class="row m-1 form-inline">
+                <b class="mx-1 my-auto">Name:</b>
+                <input type="text" name="name" placeholder="Player Name"/>
+            </div>
+            <div class="row m-1 form-inline">
+                <b class="mx-1 my-auto">Receive Emails:</b>
+                <input class="mx-1 my-auto" type="checkbox" name="receiveEmails"/>
+                <input class="mx-1" type="email" size="30" name="emailAddress" placeholder="Email Address"/>
+            </div>
+            <div class="row m-1 form-inline">
+                <b class="mx-1 my-auto">Receive Texts:</b>
+                <input class="mx-1 my-auto" type="checkbox" name="receiveTexts"/>
+                <select id="cellCarrier" class="form-control blu-margin mx-1" width="10" name="cellCarrier">
+                    <option th:each="cellCarrier : ${cellCarriers}" th:value="${cellCarrier}" th:text="${cellCarrier}"></option>
+                </select>
+                <input class="mx-1" type="text" name="cellNumber" placeholder="Cell Number"/>
+            </div>
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button class="btn btn-primary" name="submit" value="submit">Create Player</button>
+        </form>
+    </div>
+</section>
+
+<div th:replace="fragments/layout :: script">Script</div>
+
+</body>
+</html>

@@ -6,6 +6,9 @@ import fam.puzzle.domain.Player;
 import java.util.List;
 
 public interface PlayerService {
+    Player createPlayer(String name, boolean receiveEmails,
+                        String emailAddress, boolean receiveTexts,
+                        CellCarrier cellCarrier, String cellNumber);
     Player getPlayer(String name);
     List<Player> getPlayers();
     List<Player> getPlayerRankings(int puzzleSize);

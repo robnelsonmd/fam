@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 @Controller
@@ -27,6 +26,28 @@ public class AdminController extends AbstractController {
     @GetMapping("/admin")
     public String adminGet() {
         return "admin";
+    }
+
+    @GetMapping("/admin/createPlayer")
+    public String createPlayerGet(Model model) {
+        model.addAttribute("cellCarriers", CellCarrier.values());
+
+        return "createPlayer";
+    }
+
+    @PostMapping("/admin/createPlayer")
+    public String createPlayerPost(
+            @RequestParam("name") String name,
+            @RequestParam("receiveEmails") Optional<Boolean> receiveEmails,
+            @RequestParam("emailAddress") String emailAddress,
+            @RequestParam("receiveTexts") Optional<Boolean> receiveTexts,
+            @RequestParam("cellCarrier") CellCarrier cellCarrier,
+            @RequestParam("cellNumber") String cellNumber
+    ) {
+        playerService.createPlayer(name, receiveEmails.orElse(false),
+                emailAddress, receiveTexts.orElse(false), cellCarrier, cellNumber);
+
+        return "redirect:/admin/playerManagement";
     }
 
     @GetMapping("/admin/playerManagement")
@@ -49,8 +70,6 @@ public class AdminController extends AbstractController {
 
     @PostMapping("/admin/updatePlayer")
     public String updatePlayerPost(
-            Model model,
-            HttpSession session,
             @RequestParam("name") String name,
             @RequestParam("receiveEmails") Optional<Boolean> receiveEmails,
             @RequestParam("emailAddress") String emailAddress,
