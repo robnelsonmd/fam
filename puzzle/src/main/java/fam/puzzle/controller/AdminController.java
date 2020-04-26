@@ -25,14 +25,14 @@ public class AdminController extends AbstractController {
 
     @GetMapping("/admin")
     public String adminGet() {
-        return "admin";
+        return "admin/admin";
     }
 
     @GetMapping("/admin/createPlayer")
     public String createPlayerGet(Model model) {
         model.addAttribute("cellCarriers", CellCarrier.values());
 
-        return "createPlayer";
+        return "admin/createPlayer";
     }
 
     @PostMapping("/admin/createPlayer")
@@ -54,7 +54,7 @@ public class AdminController extends AbstractController {
     public String playerManagementGet(Model model) {
         model.addAttribute("players", playerService.getPlayers());
 
-        return "playerManagement";
+        return "admin/playerManagement";
     }
 
     @GetMapping("/admin/updatePlayer")
@@ -65,7 +65,7 @@ public class AdminController extends AbstractController {
         model.addAttribute("player", playerService.getPlayer(name));
         model.addAttribute("cellCarriers", CellCarrier.values());
 
-        return "updatePlayer";
+        return "admin/updatePlayer";
     }
 
     @PostMapping("/admin/updatePlayer")
