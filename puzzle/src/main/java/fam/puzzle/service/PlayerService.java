@@ -14,5 +14,6 @@ public interface PlayerService {
     Player incrementIncorrectGuessCount(Player player, int size);
     Player incrementShowAnswerCount(Player player);
     Player savePlayer(Player player);
-    Player updateCellInfo(Player player, CellCarrier cellCarrier, String cellNumber);
+    Player updateEmailSettings(Player player, boolean receiveEmails, String emailAddress);
+    Player updateTextSettings(Player player, boolean receiveTexts, CellCarrier cellCarrier, String cellNumber);
 }

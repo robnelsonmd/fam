@@ -43,7 +43,7 @@
                     <a href="settings" class="nav-link">Settings</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasAuthority('ADMIN')" th:classappend="${#strings.equals(page,'admin')} ? active : ''">
-                    <a href="admin" class="nav-link">Admin</a>
+                    <a href="/admin" class="nav-link">Admin</a>
                 </li>
                 <li class="nav-item">
                     <a href="logout" class="nav-link">Logout (<span th:text="${session.player}"></span>)</a>

@@ -7,6 +7,8 @@ import fam.messaging.text.TextService;
 import fam.puzzle.domain.Player;
 import fam.puzzle.repository.PlayerRepository;
 import fam.puzzle.util.PuzzleUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -15,6 +17,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
+    private static final Logger LOG = LoggerFactory.getLogger(PlayerServiceImpl.class);
+
     private final EmailService emailService;
     private final TextService textService;
     private final PlayerRepository playerRepository;
@@ -61,7 +65,9 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public List<Player> getPlayers() {
-        return playerRepository.findAll();
+        return playerRepository.findAll().stream()
+                .filter(Player::isUser)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -75,13 +81,21 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Player incrementCheatCount(Player player) {
-        player.setCheatCount(player.getCheatCount() + 1);
+        int previousCheatCount = player.getCheatCount();
+        int newCheatCount = previousCheatCount + 1;
+        LOG.info(String.format("Incrementing cheat count for player %s from %d to %d",player.getName(),previousCheatCount,newCheatCount));
+        player.setCheatCount(newCheatCount);
         return playerRepository.save(player);
     }
 
     @Override
     public Player incrementCorrectGuessCount(Player player, int size) {
-        player.setCorrectGuessCount(size, (player.getCorrectGuessCount(size) + 1));
+        String puzzleSizeString = PuzzleUtil.getPuzzleSizeString(size).toLowerCase();
+        int previousCorrectGuessCount = player.getCorrectGuessCount(size);
+        int newCorrectGuessCount = previousCorrectGuessCount + 1;
+        LOG.info(String.format("Incrementing %s digit puzzle correct guess count for player %s from %d to %d",
+                puzzleSizeString, player.getName(), previousCorrectGuessCount, newCorrectGuessCount));
+        player.setCorrectGuessCount(size, newCorrectGuessCount);
         player = playerRepository.save(player);
         updateCurrentLeader(size);
         return player;
@@ -89,7 +103,12 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Player incrementIncorrectGuessCount(Player player, int size) {
-        player.setIncorrectGuessCount(size, (player.getIncorrectGuessCount(size) + 1));
+        String puzzleSizeString = PuzzleUtil.getPuzzleSizeString(size).toLowerCase();
+        int previousIncorrectGuessCount = player.getIncorrectGuessCount(size);
+        int newIncorrectGuessCount = previousIncorrectGuessCount + 1;
+        LOG.info(String.format("Incrementing %s digit puzzle incorrect guess count for player %s from %d to %d",
+                puzzleSizeString, player.getName(), previousIncorrectGuessCount, newIncorrectGuessCount));
+        player.setIncorrectGuessCount(size, newIncorrectGuessCount);
         player = playerRepository.save(player);
         updateCurrentLeader(size);
         return player;
@@ -97,6 +116,10 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Player incrementShowAnswerCount(Player player) {
+        int previousShowAnswerCount = player.getShowAnswerCount();
+        int newShowAnswerCount = previousShowAnswerCount + 1;
+        LOG.info(String.format("Incrementing show answer count for player %s from %d to %d",
+                player.getName(), previousShowAnswerCount, newShowAnswerCount));
         player.setShowAnswerCount(player.getShowAnswerCount() + 1);
         return playerRepository.save(player);
     }
@@ -107,10 +130,23 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player updateCellInfo(Player player, CellCarrier cellCarrier, String cellNumber) {
+    public Player updateEmailSettings(Player player, boolean receiveEmails, String emailAddress) {
+        LOG.info(String.format("Updating email settings for player %s to %s/%s",
+                player.getName(), receiveEmails, emailAddress));
+        player.setReceiveEmails(receiveEmails);
+        player.setEmailAddress(emailAddress);
+        return savePlayer(player);
+    }
+
+    @Override
+    public Player updateTextSettings(Player player, boolean receiveTexts, CellCarrier cellCarrier, String cellNumber) {
+        String textAddress = textService.getTextAddress(cellCarrier, cellNumber);
+        LOG.info(String.format("Updating text settings for player %s to %s/%s/%s/%s",
+                player.getName(), receiveTexts, cellCarrier, cellNumber, textAddress));
+        player.setReceiveTexts(receiveTexts);
         player.setCellCarrier(cellCarrier);
         player.setCellNumber(cellNumber);
-        player.setTextAddress(textService.getTextAddress(cellCarrier, cellNumber));
+        player.setTextAddress(textAddress);
         return savePlayer(player);
     }
 
@@ -187,7 +223,8 @@ public class PlayerServiceImpl implements PlayerService {
     private void updateCurrentLeader(int size) {
         List<Player> playerRankings = getPlayerRankings(size);
         Player newLeader = !playerRankings.isEmpty() ? playerRankings.get(0) : null;
-        if (!Objects.equals(currentLeaders.get(size), newLeader)) {
+        Player currentLeader = currentLeaders.get(size);
+        if (!Objects.equals(currentLeader, newLeader)) {
             currentLeaders.put(size, newLeader);
             sendPuzzleLeaderChangeNotification(getPlayerRankings(size), size);
         }

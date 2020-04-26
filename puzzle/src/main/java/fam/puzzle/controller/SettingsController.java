@@ -42,32 +42,27 @@ public class SettingsController extends AbstractController {
     ) {
         Player player = getPlayer(session);
 
-        if (player.isReceiveEmails() != updatedPlayer.isReceiveEmails()) {
-            LOG.info(String.format("%s updated their receive emails setting to %s",player,updatedPlayer.isReceiveEmails()));
-            player.setReceiveEmails(updatedPlayer.isReceiveEmails());
-            player = playerService.savePlayer(player);
+        if (areEmailSettingsDifferent(player, updatedPlayer)) {
+            player = playerService.updateEmailSettings(player, updatedPlayer.isReceiveEmails(), updatedPlayer.getEmailAddress());
         }
 
-        if (!Objects.equals(player.getEmailAddress(), updatedPlayer.getEmailAddress())) {
-            LOG.info(String.format("%s updated their email to %s",player,updatedPlayer.getEmailAddress()));
-            player.setEmailAddress(updatedPlayer.getEmailAddress());
-            player = playerService.savePlayer(player);
-        }
-
-        if (player.isReceiveTexts() != updatedPlayer.isReceiveTexts()) {
-            LOG.info(String.format("%s updated their receive texts setting to %s",player,updatedPlayer.isReceiveTexts()));
-            player.setReceiveTexts(updatedPlayer.isReceiveTexts());
-            player = playerService.savePlayer(player);
-        }
-
-        if ((player.getCellCarrier() != updatedPlayer.getCellCarrier()) ||
-                !Objects.equals(player.getCellNumber(), updatedPlayer.getCellNumber())) {
-            LOG.info(String.format("%s updated their cell info to %s:%s",player,updatedPlayer.getCellCarrier(),updatedPlayer.getCellNumber()));
-            playerService.updateCellInfo(player, updatedPlayer.getCellCarrier(), updatedPlayer.getCellNumber());
+        if (areTextSettingsDifferent(player, updatedPlayer)) {
+            player = playerService.updateTextSettings(player, updatedPlayer.isReceiveTexts(), updatedPlayer.getCellCarrier(), updatedPlayer.getCellNumber());
         }
 
         updatePlayer(session, player);
 
         return "index";
+    }
+
+    private boolean areEmailSettingsDifferent(Player player1, Player player2) {
+        return (player1.isReceiveEmails() != player2.isReceiveEmails()) ||
+                !Objects.equals(player1.getEmailAddress(), player2.getEmailAddress());
+    }
+
+    private boolean areTextSettingsDifferent(Player player1, Player player2) {
+        return (player1.isReceiveTexts() != player2.isReceiveTexts()) ||
+                (player1.getCellCarrier() != player2.getCellCarrier()) ||
+                !Objects.equals(player1.getCellNumber(), player2.getCellNumber());
     }
 }

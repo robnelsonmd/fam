@@ -79,6 +79,16 @@ public class Player extends PuzzleUser implements Serializable {
         this.textAddress = textAddress;
     }
 
+    @JsonIgnore
+    public boolean isAdmin() {
+        return getAuthorities().contains(PuzzleGrantedAuthority.ADMIN);
+    }
+
+    @JsonIgnore
+    public boolean isUser() {
+        return getAuthorities().contains(PuzzleGrantedAuthority.USER);
+    }
+
     public boolean isReceiveEmails() {
         return receiveEmails;
     }
@@ -126,6 +136,14 @@ public class Player extends PuzzleUser implements Serializable {
 
     public void setCorrectThreeDigitGuessCount(int count) {
         correctGuessCounts.put(3, count);
+    }
+
+    @JsonIgnore
+    public String getDetails() {
+        return String.format("Player {name = %s, receiveEmails = %s, " +
+                "emailAddress = %s, receiveTexts = %s, cellCarrier = %s, " +
+                "cell number = %s}", getName(), isReceiveEmails(), getEmailAddress(),
+                isReceiveTexts(), getCellCarrier(), getCellNumber());
     }
 
     public int getIncorrectFourDigitGuessCount() {
