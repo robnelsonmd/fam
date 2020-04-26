@@ -29,6 +29,13 @@ public class AdminController extends AbstractController {
         return "admin";
     }
 
+    @GetMapping("/admin/playerManagement")
+    public String playerManagementGet(Model model) {
+        model.addAttribute("players", playerService.getPlayers());
+
+        return "playerManagement";
+    }
+
     @GetMapping("/admin/updatePlayer")
     public String updatePlayerGet(
             Model model,
@@ -55,13 +62,6 @@ public class AdminController extends AbstractController {
         playerService.updateEmailSettings(player, receiveEmails.orElse(false), emailAddress);
         playerService.updateTextSettings(player, receiveTexts.orElse(false), cellCarrier, cellNumber);
 
-        return "redirect:/admin/userManagement";
-    }
-
-    @GetMapping("/admin/userManagement")
-    public String userManagementGet(Model model) {
-        model.addAttribute("players", playerService.getPlayers());
-
-        return "userManagement";
+        return "redirect:/admin/playerManagement";
     }
 }
