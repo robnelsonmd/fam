@@ -67,6 +67,7 @@ public class PlayerServiceImpl implements PlayerService {
     public List<Player> getPlayers() {
         return playerRepository.findAll().stream()
                 .filter(Player::isUser)
+                .sorted(Comparator.comparing(Player::getName))
                 .collect(Collectors.toList());
     }
 
