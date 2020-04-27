@@ -294,6 +294,7 @@ public class PlayerServiceImpl implements PlayerService {
     private void resetPuzzleRankings() {
         resetPuzzleRankings(3);
         resetPuzzleRankings(4);
+        currentLeaders.clear();
     }
 
     private void resetPuzzleRankings(int puzzleSize) {
