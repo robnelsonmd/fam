@@ -2,7 +2,10 @@ package fam.puzzle.generator.hint;
 
 import fam.core.util.StringUtil;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -56,9 +59,9 @@ public class NumberSequenceHint extends Hint {
 
     protected Iterator<Integer> getRandomlyOrderedPositions(List<Integer> answer) {
         int numberOfPositions = numberOfCorrectDigits + (numberOfCorrectDigits - numberOfCorrectPlacements);
-        List<Integer> positions = IntStream.range(0,answer.size()).boxed().limit(numberOfPositions).collect(Collectors.toList());
+        List<Integer> positions = IntStream.range(0,answer.size()).boxed().collect(Collectors.toList());
         Collections.shuffle(positions);
-        return positions.iterator();
+        return positions.subList(0, numberOfPositions).iterator();
     }
 
     @Override
