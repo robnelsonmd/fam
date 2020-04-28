@@ -1,5 +1,7 @@
 package fam.puzzle.generator.hint;
 
+import fam.puzzle.util.PuzzleUtil;
+
 import java.util.List;
 
 public class AllNumbersIncorrectHint extends Hint {
@@ -18,8 +20,22 @@ public class AllNumbersIncorrectHint extends Hint {
         super(builder);
     }
 
+    private AllNumbersIncorrectHint(List<Integer> hint) {
+        setHint(hint);
+    }
+
     public static Builder builder(List<Integer> answer) {
         return new Builder(answer);
+    }
+
+    public static AllNumbersIncorrectHint deserialize(String hintString) {
+        List<Integer> hint = PuzzleUtil.deserializeNumberList(hintString);
+        return new AllNumbersIncorrectHint(hint);
+    }
+
+    @Override
+    public String serialize() {
+        return String.format("%d:%s",HintType.ALL_WRONG.getValue(), PuzzleUtil.serializeNumberList(getHint()));
     }
 
     @Override

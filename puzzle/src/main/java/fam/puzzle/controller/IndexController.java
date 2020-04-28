@@ -43,9 +43,7 @@ public class IndexController extends AbstractController {
             @RequestParam("newPuzzle") Optional<String> newPuzzle
     ) {
         if (showAnswer.isPresent()) {
-            LOG.info(String.format("%s showed the answer",getPlayer(session)));
-            incrementShowAnswerCount(session);
-            model.addAttribute("answer", getAnswer(session));
+            processShowAnswer(model, session);
         }
 
         if (newPuzzle.isPresent()) {
@@ -68,7 +66,14 @@ public class IndexController extends AbstractController {
             HttpSession session,
             @RequestParam("size") int size
     ) {
-        getNewPuzzle(session, size);
+        Player player = getPlayer(session);
+        Puzzle puzzle = player.getPuzzle(size);
+
+        if (puzzle != null) {
+            updatePuzzle(session, puzzle);
+        } else {
+            getNewPuzzle(session, size);
+        }
 
         return "redirect:index";
     }
@@ -121,7 +126,11 @@ public class IndexController extends AbstractController {
     private void getNewPuzzle(HttpSession session, int size) {
         String puzzleSizeString = PuzzleUtil.getPuzzleSizeString(size).toLowerCase();
         LOG.info(String.format("Getting new %s digit puzzle for %s",puzzleSizeString,getPlayer(session)));
-        updatePuzzle(session, puzzleService.getNewPuzzle(size));
+        Puzzle puzzle = puzzleService.getNewPuzzle(size);
+        Player player = getPlayer(session);
+        player = playerService.updatePuzzle(player, puzzle);
+        updatePlayer(session, player);
+        updatePuzzle(session, puzzle);
     }
 
     private List<Integer> getAnswer(HttpSession session) {
@@ -164,12 +173,14 @@ public class IndexController extends AbstractController {
     }
 
     private void processCorrectGuess(Model model, HttpSession session) {
-        LOG.info(String.format("%s guessed correctly",getPlayer(session)));
+        Player player = getPlayer(session);
+        LOG.info(String.format("%s guessed correctly",player));
+
         incrementCorrectGuessCount(session);
-        model.addAttribute("answer",
-                String.format("The answer is: %s",getAnswer(session)));
-        model.addAttribute("result",
-                "You guessed correctly!");
+        model.addAttribute("answer", String.format("The answer is: %s",getAnswer(session)));
+        model.addAttribute("result", "You guessed correctly!");
+
+        removePuzzleFromPlayer(session, player);
     }
 
     private void processIncorrectGuess(Model model, HttpSession session, String guess) {
@@ -177,6 +188,22 @@ public class IndexController extends AbstractController {
         incrementIncorrectGuessCount(session);
         model.addAttribute("result",
                 String.format("%s is not the correct answer - try again",guess));
+    }
+
+    private void processShowAnswer(Model model, HttpSession session) {
+        Player player = getPlayer(session);
+
+        LOG.info(String.format("%s showed the answer",getPlayer(session)));
+        incrementShowAnswerCount(session);
+        model.addAttribute("answer", getAnswer(session));
+
+        removePuzzleFromPlayer(session, player);
+    }
+
+    private void removePuzzleFromPlayer(HttpSession session, Player player) {
+        int puzzleSize = getCurrentPuzzleSize(session);
+        player = playerService.removePuzzle(player, puzzleSize);
+        updatePlayer(session, player);
     }
 
     private void updatePuzzle(HttpSession session, Puzzle puzzle) {

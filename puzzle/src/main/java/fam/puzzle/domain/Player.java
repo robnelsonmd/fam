@@ -18,6 +18,7 @@ public class Player extends PuzzleUser implements Serializable {
 
     private final Map<Integer,Integer> correctGuessCounts = new HashMap<>();
     private final Map<Integer,Integer> incorrectGuessCounts = new HashMap<>();
+    private final Map<Integer,Puzzle> puzzles = new HashMap<>();
     private CellCarrier cellCarrier = CellCarrier.ATT;
     private String cellNumber;
     private String emailAddress;
@@ -45,6 +46,33 @@ public class Player extends PuzzleUser implements Serializable {
 
     public Player() {
         this("FORM-PLAYER");
+    }
+
+    @JsonIgnore
+    public Puzzle getPuzzle(int puzzleSize) {
+        return this.puzzles.get(puzzleSize);
+    }
+
+    public void setPuzzle(Puzzle puzzle, int size) {
+        this.puzzles.put(size, puzzle);
+    }
+
+    public String getFourDigitPuzzle() {
+        Puzzle puzzle = puzzles.get(4);
+        return (puzzle != null) ? puzzle.serialize() : null;
+    }
+
+    public void setFourDigitPuzzle(String puzzleString) {
+        this.puzzles.put(4, Puzzle.deserialize(puzzleString));
+    }
+
+    public String getThreeDigitPuzzle() {
+        Puzzle puzzle = puzzles.get(3);
+        return (puzzle != null) ? puzzle.serialize() : null;
+    }
+
+    public void setThreeDigitPuzzle(String puzzleString) {
+        this.puzzles.put(3, Puzzle.deserialize(puzzleString));
     }
 
     public CellCarrier getCellCarrier() {

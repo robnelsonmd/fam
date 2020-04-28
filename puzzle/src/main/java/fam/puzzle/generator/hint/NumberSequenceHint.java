@@ -1,6 +1,7 @@
 package fam.puzzle.generator.hint;
 
 import fam.core.util.StringUtil;
+import fam.puzzle.util.PuzzleUtil;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -38,8 +39,28 @@ public class NumberSequenceHint extends Hint {
         super(builder);
     }
 
+    private NumberSequenceHint(List<Integer> hint, int numberOfCorrectDigits, int numberOfCorrectPlacements) {
+        this.numberOfCorrectDigits = numberOfCorrectDigits;
+        this.numberOfCorrectPlacements = numberOfCorrectPlacements;
+        setHint(hint);
+    }
+
     public static Builder builder(List<Integer> answer) {
         return new Builder(answer);
+    }
+
+    public static NumberSequenceHint deserialize(String hintString) {
+        int numberOfCorrectDigits = Integer.parseInt(hintString.substring(0,1));
+        int numberOfCorrectPlacements = Integer.parseInt(hintString.substring(1,2));
+        List<Integer> hint = PuzzleUtil.deserializeNumberList(hintString.substring(2));
+        return new NumberSequenceHint(hint, numberOfCorrectDigits, numberOfCorrectPlacements);
+    }
+
+    @Override
+    public String serialize() {
+        return String.format("%d:%d%d%s",HintType.NUMBER_SEQUENCE.getValue(),
+                numberOfCorrectDigits,numberOfCorrectPlacements,
+                PuzzleUtil.serializeNumberList(getHint()));
     }
 
     @Override

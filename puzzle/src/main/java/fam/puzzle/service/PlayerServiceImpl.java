@@ -6,6 +6,7 @@ import fam.messaging.email.EmailService;
 import fam.messaging.text.CellCarrier;
 import fam.messaging.text.TextService;
 import fam.puzzle.domain.Player;
+import fam.puzzle.domain.Puzzle;
 import fam.puzzle.repository.PlayerRepository;
 import fam.puzzle.util.PuzzleUtil;
 import org.slf4j.Logger;
@@ -155,6 +156,12 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
+    public Player removePuzzle(Player player, int puzzleSize) {
+        player.setPuzzle(null, puzzleSize);
+        return savePlayer(player);
+    }
+
+    @Override
     public Player savePlayer(Player player) {
         return playerRepository.save(player);
     }
@@ -165,6 +172,12 @@ public class PlayerServiceImpl implements PlayerService {
                 player.getName(), receiveEmails, emailAddress));
         player.setReceiveEmails(receiveEmails);
         player.setEmailAddress(emailAddress);
+        return savePlayer(player);
+    }
+
+    @Override
+    public Player updatePuzzle(Player player, Puzzle puzzle) {
+        player.setPuzzle(puzzle, puzzle.getSize());
         return savePlayer(player);
     }
 

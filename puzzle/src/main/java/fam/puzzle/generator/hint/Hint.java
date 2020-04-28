@@ -2,11 +2,12 @@ package fam.puzzle.generator.hint;
 
 import fam.puzzle.util.PuzzleUtil;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public abstract class Hint {
+public abstract class Hint implements Serializable {
     public static abstract class Builder<H extends Hint, B extends Builder<H,B>> {
         private final List<Integer> answer = new ArrayList<>();
         protected final H hint;
@@ -31,6 +32,8 @@ public abstract class Hint {
     protected Hint(Builder builder) {
     }
 
+    protected Hint() {}
+
     public void initialize(List<Integer> answer) {
         this.hint = generateHint(answer);
         this.possibleMatches = generatePossibleMatches(hint, answer.size());
@@ -48,6 +51,8 @@ public abstract class Hint {
         return possibleMatches;
     }
 
+    public abstract String serialize();
+
     @Override
     public String toString() {
         return String.format("%s: %s",hint, getHintText());
@@ -59,6 +64,10 @@ public abstract class Hint {
         Set<Integer> matchingNumbers = new HashSet<>(sequence);
         matchingNumbers.retainAll(hint);
         return matchingNumbers;
+    }
+
+    protected List<Integer> getHint() {
+        return hint;
     }
 
     protected abstract String getHintText();
@@ -79,6 +88,11 @@ public abstract class Hint {
     }
 
     protected abstract boolean isPossibleMatch(List<Integer> sequence, List<Integer> hint);
+
+    protected void setHint(List<Integer> hint) {
+        this.hint = hint;
+        this.possibleMatches = generatePossibleMatches(hint, hint.size());
+    }
 
     private Set<List<Integer>> generatePossibleMatches(final List<Integer> hint, int numberOfDigits) {
         return PuzzleUtil.getAllPossibleNumberSequences(numberOfDigits).stream()

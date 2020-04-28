@@ -44,4 +44,12 @@ public final class PuzzleUtil {
                 throw new IllegalStateException("Invalid size: " + size);
         }
     }
+
+    public static List<Integer> deserializeNumberList(String numberList) {
+        return numberList.chars().map(Character::getNumericValue).boxed().collect(Collectors.toList());
+    }
+
+    public static String serializeNumberList(List<Integer> numbers) {
+        return numbers.stream().map(String::valueOf).collect(Collectors.joining(""));
+    }
 }

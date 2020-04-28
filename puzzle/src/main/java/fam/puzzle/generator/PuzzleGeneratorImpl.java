@@ -2,8 +2,7 @@ package fam.puzzle.generator;
 
 import fam.puzzle.domain.Puzzle;
 import fam.puzzle.generator.hint.Hint;
-import fam.puzzle.generator.hint.HintFactory;
-import fam.puzzle.generator.hint.HintType;
+import fam.puzzle.generator.hint.NumberSequenceHint;
 import fam.puzzle.util.PuzzleUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,23 +82,30 @@ public class PuzzleGeneratorImpl implements PuzzleGenerator {
     private static List<Hint> generateHintsForSize(List<Integer> answer, int size) {
         List<Hint> hints = (size == 3) ?
                 Arrays.asList(
-                    HintFactory.createHint(HintType.ONE_RIGHT_CORRECT_POSITION, answer),
-                    HintFactory.createHint(HintType.ONE_RIGHT_CORRECT_POSITION, answer),
-                    HintFactory.createHint(HintType.ONE_RIGHT_INCORRECT_POSITION, answer),
-                    HintFactory.createHint(HintType.ONE_RIGHT_INCORRECT_POSITION, answer),
-                    HintFactory.createHint(HintType.TWO_RIGHT_ONE_CORRECT_POSITION, answer)
+                    generateNumberSequenceHint(answer, 1, 1),
+                    generateNumberSequenceHint(answer, 1, 1),
+                    generateNumberSequenceHint(answer, 1, 0),
+                    generateNumberSequenceHint(answer, 1, 0),
+                    generateNumberSequenceHint(answer, 2, 1)
                 ) :
                 Arrays.asList(
-                    HintFactory.createHint(HintType.ONE_RIGHT_CORRECT_POSITION, answer),
-                    HintFactory.createHint(HintType.ONE_RIGHT_CORRECT_POSITION, answer),
-                    HintFactory.createHint(HintType.ONE_RIGHT_INCORRECT_POSITION, answer),
-                    HintFactory.createHint(HintType.ONE_RIGHT_INCORRECT_POSITION, answer),
-                    HintFactory.createHint(HintType.ONE_RIGHT_INCORRECT_POSITION, answer),
-                    HintFactory.createHint(HintType.TWO_RIGHT_INCORRECT_POSITION, answer),
-                    HintFactory.createHint(HintType.TWO_RIGHT_ONE_CORRECT_POSITION, answer)
+                    generateNumberSequenceHint(answer, 1, 1),
+                    generateNumberSequenceHint(answer, 1, 1),
+                    generateNumberSequenceHint(answer, 1, 0),
+                    generateNumberSequenceHint(answer, 1, 0),
+                    generateNumberSequenceHint(answer, 1, 0),
+                    generateNumberSequenceHint(answer, 2, 0),
+                    generateNumberSequenceHint(answer, 2, 1)
                 );
 
         return hints;
+    }
+
+    private static NumberSequenceHint generateNumberSequenceHint(List<Integer> answer, int numberOfCorrectDigits, int numberOfCorrectPlacements) {
+        return NumberSequenceHint.builder(answer)
+                .numberOfCorrectDigits(numberOfCorrectDigits)
+                .numberOfCorrectPlacements(numberOfCorrectPlacements)
+                .build();
     }
 
     private Puzzle generatePuzzle() {
@@ -123,7 +129,7 @@ public class PuzzleGeneratorImpl implements PuzzleGenerator {
             LOG.info(String.format("Required %d attempts to generate puzzle",count));
         }
 
-        return new Puzzle(answer, hints, possibleMatches);
+        return new Puzzle(answer, hints);
     }
 
     private void generatePuzzles() {

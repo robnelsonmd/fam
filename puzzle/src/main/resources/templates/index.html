@@ -60,7 +60,7 @@
 
     <section id="answer">
         <div class="container">
-            <div th:if="${session.puzzle.incorrectGuessCount != null}" class="row">
+            <div th:if="${session.puzzle.incorrectGuessCount != 0}" class="row">
                 <div class="col-xs-12 align-self-center m-auto">
                 <span class="answer">
                     Number of incorrect guesses: <span th:text="${session.puzzle.incorrectGuessCount}">Static Guess Count</span>
