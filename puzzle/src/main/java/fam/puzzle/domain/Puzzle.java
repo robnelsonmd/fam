@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -124,5 +125,18 @@ public class Puzzle implements Serializable {
 
     public String serialize() {
         return String.format("%s:%d:%s",PuzzleUtil.serializeNumberList(answer),incorrectGuessCount,hints.stream().map(Hint::serialize).collect(Collectors.toList())).replaceAll(" ","");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Puzzle puzzle = (Puzzle) o;
+        return serialize().equals(puzzle.serialize());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(serialize());
     }
 }

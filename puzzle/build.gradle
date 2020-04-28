@@ -4,7 +4,7 @@ plugins {
     id 'java'
 }
 
-version = '6.8-SNAPSHOT'
+version = '6.8'
 sourceCompatibility = '8'
 
 configurations {

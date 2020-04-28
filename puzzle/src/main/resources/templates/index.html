@@ -13,7 +13,7 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12 align-self-center m-auto">
-                <span class="player-name">Welcome, <span th:text="${session.player.name}">Name</span>!</span>
+                <span class="player-name">Welcome, <span th:remove="tag" th:text="${session.player.name}">Name</span>!</span>
             </div>
         </div>
     </div>
