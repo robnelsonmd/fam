@@ -1,9 +1,9 @@
 package fam.puzzle.config;
 
-import fam.core.executor.TaskScheduler;
-import fam.core.executor.TaskSchedulerImpl;
 import fam.puzzle.generator.PuzzleGenerator;
 import fam.puzzle.generator.PuzzleGeneratorImpl;
+import fambam.core.executor.TaskScheduler;
+import fambam.core.executor.TaskSchedulerImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

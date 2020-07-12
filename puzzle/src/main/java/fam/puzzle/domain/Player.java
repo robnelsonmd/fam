@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import fam.core.util.StringUtil;
 import fam.messaging.text.CellCarrier;
 import fam.puzzle.security.PuzzleGrantedAuthority;
 import fam.puzzle.security.PuzzleUser;
+import fambam.core.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.*;
@@ -35,7 +35,7 @@ public class Player extends PuzzleUser implements Serializable {
     {
         super(name, authorities);
 
-        if (StringUtil.isEmptyString(name)) {
+        if (StringUtils.isEmptyString(name)) {
             throw new IllegalArgumentException(String.format("Invalid player name (%s)", name));
         }
     }

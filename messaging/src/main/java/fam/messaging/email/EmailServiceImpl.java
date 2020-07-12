@@ -1,6 +1,6 @@
 package fam.messaging.email;
 
-import fam.core.util.StringUtil;
+import fambam.core.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.MailException;
@@ -29,12 +29,12 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendEmail(String subject, String text, String to, String[] bcc) {
-        if (StringUtil.isEmptyString(subject) && StringUtil.isEmptyString(text)) {
+        if (StringUtils.isEmptyString(subject) && StringUtils.isEmptyString(text)) {
             throw new IllegalArgumentException("Unable to send email - subject and text cannot both be empty");
         }
 
 
-        if (StringUtil.isEmptyString(to) && (bcc == null)) {
+        if (StringUtils.isEmptyString(to) && (bcc == null)) {
             throw new IllegalArgumentException("Unable to send email - to and bcc cannot both be empty");
         }
 

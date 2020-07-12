@@ -1,7 +1,5 @@
 package fam.puzzle.service;
 
-import fam.core.executor.TaskScheduler;
-import fam.core.util.StringUtil;
 import fam.messaging.email.EmailService;
 import fam.messaging.text.CellCarrier;
 import fam.messaging.text.TextService;
@@ -9,6 +7,8 @@ import fam.puzzle.domain.Player;
 import fam.puzzle.domain.Puzzle;
 import fam.puzzle.repository.PlayerRepository;
 import fam.puzzle.util.PuzzleUtil;
+import fambam.core.executor.TaskScheduler;
+import fambam.core.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -301,7 +301,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     private static boolean isValidEmailAdress(String emailAddress) {
-        return !StringUtil.isEmptyString(emailAddress);
+        return !StringUtils.isEmptyString(emailAddress);
     }
 
     private void resetPuzzleRankings() {

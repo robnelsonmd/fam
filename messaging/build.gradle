@@ -17,7 +17,7 @@ configurations {
 }
 
 dependencies {
-    implementation project(':core')
+    implementation "fambam:core:1.0"
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {

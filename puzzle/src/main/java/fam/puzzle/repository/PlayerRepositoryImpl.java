@@ -1,7 +1,7 @@
 package fam.puzzle.repository;
 
-import fam.core.repository.file.FileRepositoryImpl;
 import fam.puzzle.domain.Player;
+import fambam.core.repository.file.FileRepositoryImpl;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;

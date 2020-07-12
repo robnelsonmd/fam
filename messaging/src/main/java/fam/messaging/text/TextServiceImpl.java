@@ -1,7 +1,7 @@
 package fam.messaging.text;
 
-import fam.core.util.StringUtil;
 import fam.messaging.email.EmailService;
+import fambam.core.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +16,7 @@ public class TextServiceImpl implements TextService {
 
     @Override
     public String getTextAddress(CellCarrier cellCarrier, String cellNumber) {
-        if (StringUtil.isEmptyString(cellNumber)) {
+        if (StringUtils.isEmptyString(cellNumber)) {
             return null;
         }
 

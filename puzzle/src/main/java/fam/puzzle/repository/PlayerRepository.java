@@ -1,7 +1,7 @@
 package fam.puzzle.repository;
 
-import fam.core.repository.file.FileRepository;
 import fam.puzzle.domain.Player;
+import fambam.core.repository.file.FileRepository;
 
 public interface PlayerRepository extends FileRepository<Player> {
     Player findPlayer(String name);

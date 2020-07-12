@@ -1,7 +1,7 @@
 package fam.puzzle.generator.hint;
 
-import fam.core.util.StringUtil;
 import fam.puzzle.util.PuzzleUtil;
+import fambam.core.util.StringUtils;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -103,7 +103,7 @@ public class NumberSequenceHint extends Hint {
     }
 
     private String getHintStringPrefix() {
-        String numberString = StringUtil.capitalizeString(getNumberString(numberOfCorrectDigits), StringUtil.CapitalizationStrategy.FIRST_LETTER);
+        String numberString = StringUtils.capitalizeString(getNumberString(numberOfCorrectDigits), StringUtils.CapitalizationStrategy.FIRST_LETTER);
         return String.format("%s correct",numberString);
     }
 
